@@ -1,0 +1,27 @@
+Créer des groupes de sécurité
+	- à la main
+		groupcategory = security
+		groupscope = choix entre 3
+		path = en fonction de groupscope, placement dans l'une des OU sous l'OU "Groupes"
+	- Basé sur un CSV
+		Importer le CSV
+		Demander à l'utilisateur entre GroupScope DomainLocal, Global ou Universal
+
+
+Créer des groupes de domaine local
+	- Basé sur un nom de partage
+		Création de DL_<domaine>_<partage>_CT
+		Création de DL_<domaine>_<partage>_M
+		Création de DL_<domaine>_<partage>_L
+		Création de DL_<domaine>_<partage>_R
+
+Créer des partages et les DL
+	Demander le nom du partage
+	Créer les 4 DL y correspondant
+	Créer les groupes, dans la bonne UO
+	Prévenir l'utilisateur de modifier les ACL sur le serveur de fichiers
+
+Créer des modèles d'utilisateurs
+	
+
+Créer des modèles et y inclure les groupes
