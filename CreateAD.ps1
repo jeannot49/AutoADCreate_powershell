@@ -3,16 +3,27 @@ Date de création :          2019-01-24 à 16:44
 Auteur           :          Jean Guitton
 Sources          :          Microsoft Technet, Stack Overflow, Chaine Youtube Editions ENI
 Version          :          1.0.1
-Dernière modif.  :          2019-01-27 à 02:45
+Dernière modif.  :          2019-01-27 à 13:27
 #>
 
+###############################
 # Appel au fichier de fonctions
 . .\Library_CreateAD.ps1
+
+###############################################################
+# Exécution de différentes vérifications essentielles au script
+ExecuteVerifications
 
 #============================================================
 #========================== Worker ==========================
 #============================================================
 
+#############################
+# Affichage du Menu principal
+PrincipalMenu
+
+####################################
+# Demandes d'informations du domaine
 Write-Host " "
 Write-Host "!!!!!  IMPORTANT  !!!!! "
 Write-Host "S'il s'agit de la premiere fois dans cet annuaire, il est conseille d'executer tout le script une fois, via l'option (6)"
@@ -20,11 +31,11 @@ Write-Host " "
 Write-Host "Description du script :"
 Write-Host " "
 Write-Host "/!\ Étape n°0 : Entrer le nom de domaine en notation LDAP comme ceci : domaine.fr --> dc1 = DOMAINE & dc2 = FR"
-$dc1 = Read-Host "Entrez la valeur de dc1"
-$dc2 = Read-Host "Entrez la valeur de dc2"
+$dc1 = Read-Host "Entrez la valeur de dc1 "
+$dc2 = Read-Host "Entrez la valeur de dc2 "
 Write-Host " "
 Write-Host "/!\ Étape n°1 : Créer l'OU racine, elle accueillera toutes les OU du domaine"
-$NewOUname = Read-Host "Entrez le nom de l'OU racine du domaine"
+$NewOUname = Read-Host "Entrez le nom de l'OU racine du domaine "
 Write-Host " "
 Write-Host "Avant de continuer, veuillez compléter le fichier nommé 'nom_OU.csv'"
 
@@ -34,8 +45,6 @@ $coma = ","
 $rootOU = "OU=$NewOUname"
 $DefinitiveDC = "DC=$dc1,DC=$dc2"
 $rootarray = @('Utilisateurs','Ordinateurs','Groupes','Ressources','Partages')
-
-PrincipalMenu
 
 ####################################
 # Création des unités d'organisation principales : celles de $rootarray complétées avec le fichier .csv "nom_OU.csv" (var $tabOU)

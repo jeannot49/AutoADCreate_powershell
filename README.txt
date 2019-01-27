@@ -15,7 +15,11 @@ V1.0.0 : 	Création de la structure de bases d'UO (Types de ressources, services,
 V1.0.1 : 	Fonction d'ajout de groupes (Domaine local, global et universel)
 		Ajout de groupes grâce au fichier new_groups.csv
 		Ajout de DL spécifiques à AGDLP
+V1.0.2 :	Fonctionnalité de vérification d'erreur : codage UTF-8 requis
+		Menu principal réduit si l'utilisateur ne respecte pas les spécifications
+		Correction de soucis d'affichage
 **************************************************************************************************
 À faire :
   . Ajout des comptes utilisateurs modèles
   . Gestion des logs
+  . Vérifier que l'OU racine mentionnée dans le fichier Excel est le même que celui noté en début      de script

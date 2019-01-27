@@ -12,7 +12,6 @@ Dernière modif.  :          2019-01-27 à 02:46
 
 ############################################################
 # Teste la présence d'un module ou non dans le système local
-
 function Test-Module 
 {
     Param (
@@ -25,6 +24,60 @@ function Test-Module
     catch {
         Write-host "Module '$PSModule' absent, veuillez l'installer avant de continuer"
         DisplayErrorMessage  
+    }
+}
+
+###################################
+# Exécute des vérifications de base
+function ExecuteVerifications {
+    SetUTF8
+}
+
+######################################################################
+# Vérification du codage clavier, il doit impérativement être en UTF-8
+function SetUTF8 {
+    $detected = $PSDefaultParameterValues['Out-File:Encoding']
+    if ($detected -like 'utf8') {
+        Write-Host ""
+        Write-Host "La codage par defaut est $detected, le script peut continuer... "
+    }
+    else {
+        do {
+            Write-Host ""
+            $choice = Read-Host "Le codage clavier '$detected' n'est pas compatible avec ce script. Voulez-vous le modifier ? Oui (O), Non (N) "
+        } until ($choice -match '^[ON]+$')
+        switch ($choice) {
+            "O" {
+                $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
+            }
+            "N" {
+                DisplayErrorMessage
+            }
+        }
+    }
+}
+
+############################################
+# Affichage d'un Menu réduit en cas d'erreur
+function PrincipalMenuReduced {
+    Write-Host "_________________________________________________________"
+    Write-Host "|                                                       |"
+    Write-Host "|          1. Executer les verifications                |"
+    Write-Host "|          2. Sortir                                    |"
+    Write-Host "|_______________________________________________________|"
+do {
+        Write-Host ""
+        $task = Read-Host "Entrez le numero de la tache a executer "
+    } until ($task -match '^[12]+$')
+    switch ($task) {
+        "1" {
+            # /!\ À remettre
+            #Start-Transcript
+            ExecuteVerifications
+        }
+        "2" {
+            ExitScript
+        }
     }
 }
 
@@ -105,11 +158,11 @@ function CreateOUStructure {
 ############################################
 # Création d'un groupe de sécurité à la main
 function CreateSecurityGroup {
-$groupname = Read-Host "Saisissez le nom du groupe"
+$groupname = Read-Host "Saisissez le nom du groupe "
 $groupcategory = 'Security'
     do {
         Write-Host ""
-        $choice = Read-Host "Etendue du groupe : Domaine local (1), Global (2), Universel (3)"
+        $choice = Read-Host "Etendue du groupe : Domaine local (1), Global (2), Universel (3) "
     } until ($choice -match '^[123]+$')
     switch ($choice) {                           # Switch qui attribue les variables $groupscope et $grouppath en fonction du choix réalisé plus haut
         "1" {
@@ -177,7 +230,7 @@ function CreateAGDLPShare {
     $uds = "_"
     $coma = ","
     $egal = "="
-    $sharename = Read-Host "Nom du partage"
+    $sharename = Read-Host "Nom du partage "
     Write-Host ""
     $addomain = (Get-ADDomain).NetBIOSName
     $completesharename = "$addomain$uds$sharename"
@@ -192,15 +245,20 @@ function CreateAGDLPShare {
     New-ADGroup -Name $oudlsharename$l -DisplayName $oudlsharename$l -GroupCategory Security -GroupScope DomainLocal -Path $oudlsharepath -Verbose
     New-ADGroup -Name $oudlsharename$r -DisplayName $oudlsharename$r -GroupCategory Security -GroupScope DomainLocal -Path $oudlsharepath -Verbose
     Write-Host ""
-    Write-Host "Vous devrez modifier les ACL au sein du serveur de fichier afin de correspondre aux DL"
+    Write-Host "Vous devrez modifier les ACL au sein du serveur de fichier afin de correspondre aux DL."
 }
+
+##################################
+# Création d'un utilisateur modèle
+
 
 #####################################################
 # Affichage d'un message d'erreur et sortie du script
 function DisplayErrorMessage {
-    Write-host "An error occured, please read the message above and restart the script"
-    Wait-Event -Timeout 3
-    
+    Write-Host ""
+    Write-Host "Erreur. Veuillez lire le message plus haut."
+    Wait-Event -Timeout 5
+    PrincipalMenuReduced
 }
 
 ##################
