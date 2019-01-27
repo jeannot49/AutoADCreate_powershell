@@ -1,25 +1,26 @@
 **************************************************************************************************
-À lire avant de commencer :
+Ã€ lire avant de commencer :
 
-  . Il est conseillé d'exécuter ce programme sur un annuaire Active Directory venant tout juste d'être installé. Il peut en effet y avoir des conflits sur la création des groupes par exemple, notamment s'ils existent déjà. 
-    Plusieurs étapes sont détaillées dans le script mais il faut au préalable remplir les fichiers .csv qui serviront de base de données afin de peupler l'AD.
-    Il est possible dans ce script de sélectionner l'étape à réaliser. Un menu sera en effet disponible dès début mais le programme pourra être lancé dans son intégralité. Néanmoins, lors de la toute première exécution, il est conseillé de lancer le script en entier afin de mettre en place un maximum d'objets.
+  . Il est conseillÃ© d'exÃ©cuter ce programme sur un annuaire Active Directory venant tout juste d'Ãªtre installÃ©. Il peut en effet y avoir des conflits sur la crÃ©ation des groupes par exemple, notamment s'ils existent dÃ©jÃ . 
+    Plusieurs Ã©tapes sont dÃ©taillÃ©es dans le script mais il faut au prÃ©alable remplir les fichiers .csv qui serviront de base de donnÃ©es afin de peupler l'AD.
+    Il est possible dans ce script de sÃ©lectionner l'Ã©tape Ã  rÃ©aliser. Un menu sera en effet disponible dÃ¨s dÃ©but mais le programme pourra Ãªtre lancÃ© dans son intÃ©gralitÃ©. NÃ©anmoins, lors de la toute premiÃ¨re exÃ©cution, il est conseillÃ© de lancer le script en entier afin de mettre en place un maximum d'objets.
 
 
 
 
 **************************************************************************************************
-Mises à jour :
+Mises Ã  jour :
 
-V1.0.0 : 	Création de la structure de bases d'UO (Types de ressources, services, matériel 			etc.) grâce au fichier new_OU.csv
+V1.0.0 : 	CrÃ©ation de la structure de bases d'UO (Types de ressources, services, matÃ©riel 
+		etc.) grÃ¢ce au fichier new_OU.csv
 V1.0.1 : 	Fonction d'ajout de groupes (Domaine local, global et universel)
-		Ajout de groupes grâce au fichier new_groups.csv
-		Ajout de DL spécifiques à AGDLP
-V1.0.2 :	Fonctionnalité de vérification d'erreur : codage UTF-8 requis
-		Menu principal réduit si l'utilisateur ne respecte pas les spécifications
+		Ajout de groupes grï¿½ce au fichier new_groups.csv
+		Ajout de DL spï¿½cifiques ï¿½ AGDLP
+V1.0.2 :	Fonctionnalitï¿½ de vï¿½rification d'erreur : codage UTF-8 requis
+		Menu principal rï¿½duit si l'utilisateur ne respecte pas les spï¿½cifications
 		Correction de soucis d'affichage
 **************************************************************************************************
-À faire :
-  . Ajout des comptes utilisateurs modèles
+ï¿½ faire :
+  . Ajout des comptes utilisateurs modï¿½les
   . Gestion des logs
-  . Vérifier que l'OU racine mentionnée dans le fichier Excel est le même que celui noté en début      de script
+  . Vï¿½rifier que l'OU racine mentionnï¿½e dans le fichier Excel est le mï¿½me que celui notï¿½ en dï¿½but      de script
