@@ -2,8 +2,8 @@
 Date de création :          2019-01-24 à 16:44
 Auteur           :          Jean Guitton
 Sources          :          Microsoft Technet, Stack Overflow
-Version          :          1.0.1
-Dernière modif.  :          2019-01-27 à 02:46
+Version          :          1.0.3
+Dernière modif.  :          2019-01-27 à 21:27
 #>
 
 #==================================================================
@@ -31,6 +31,7 @@ function Test-Module
 # Exécute des vérifications de base
 function ExecuteVerifications {
     SetUTF8
+    #/!\ TODO : Vérifier que l'utilisateur a bien rempli tous les fichiers .csv
 }
 
 ######################################################################
@@ -143,13 +144,13 @@ function PrincipalMenu {
 
 ################################
 # Création d'une structure d'OU
-function CreateOUStructure {
-    $tabOU = Import-csv -Path .\nom_OU.csv -delimiter ";" # Importation du tableau contenant les services à placer dans l'annuaire, au sein de l'OU Racine
-    foreach ($item in $tabOU) {
+function CreateOUStructure {                                
+    $tabOU = Import-csv -Path .\new_OU.csv -delimiter ";"   # Importation du tableau contenant les services à placer dans l'annuaire, au sein de l'OU Racine
+    foreach ($item in $tabOU) {                             # Création d'OU de base, en fonction du fichier .csv "new_OU.csv"
         $oucreate = $item.name
         $oupath = $item.path
     
-        # Création des OU demandées dans le fichier "nom_OU.csv"
+        # Création des OU demandées dans le fichier "new_OU.csv"
         New-ADOrganizationalUnit -Name $oucreate -Path $oupath -ProtectedFromAccidentalDeletion $false -verbose
     }
     Write-Host ""
@@ -187,12 +188,12 @@ $groupcategory = 'Security'
     Write-Host ""
 }
 
-##########################################################
-# Création de plusieurs groupes à partir d'un fichier .csv
+######################################################################
+# Création de plusieurs groupes de sécurité à partir d'un fichier .csv
 function CreateMultipleSecurityGroup {
-$tabgroup = Import-Csv -Path .\new_groups.csv -delimiter ";"
-$groupcategory = 'Security'
-Write-Host ""
+    $tabgroup = Import-Csv -Path .\new_groups.csv -delimiter ";"    # Création des groupes nommés dans "new_groups.csv"
+    $groupcategory = 'Security'
+    Write-Host ""
     foreach ($item in $tabgroup) {
     $groupname = $item.name
     $groupscope = $item.groupscope
@@ -250,7 +251,30 @@ function CreateAGDLPShare {
 
 ##################################
 # Création d'un utilisateur modèle
+function CreateUserTemplate {
+    
+}
 
+######################################################
+# Création de plusieurs comptes d'utilisateurs modèles
+function CreateMultipleUserTemplate {
+    $tabusers = Import-csv -Path .\new_users.csv -delimiter ";" # Importation du tableau contenant les utilisateurs à ajouter, dans les bonnes OU
+    foreach ($item in $tabusers) {
+
+    }
+}
+
+###########################
+# Création d'un utilisateur
+function CreateUser {
+
+}
+
+####################################
+# Création de plusieurs utilisateurs
+function CreateMultipleUser {
+
+}
 
 #####################################################
 # Affichage d'un message d'erreur et sortie du script

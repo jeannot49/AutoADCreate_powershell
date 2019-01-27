@@ -2,8 +2,8 @@
 Date de création :          2019-01-24 à 16:44
 Auteur           :          Jean Guitton
 Sources          :          Microsoft Technet, Stack Overflow, Chaine Youtube Editions ENI
-Version          :          1.0.1
-Dernière modif.  :          2019-01-27 à 13:27
+Version          :          1.0.3
+Dernière modif.  :          2019-01-27 à 21:27
 #>
 
 ###############################
@@ -37,7 +37,7 @@ Write-Host " "
 Write-Host "/!\ Étape n°1 : Créer l'OU racine, elle accueillera toutes les OU du domaine"
 $NewOUname = Read-Host "Entrez le nom de l'OU racine du domaine "
 Write-Host " "
-Write-Host "Avant de continuer, veuillez compléter le fichier nommé 'nom_OU.csv'"
+Write-Host "Avant de continuer, veuillez cosulter le fichier nommé README.txt"
 
 ##########################
 # Déclaration de variables
@@ -46,8 +46,8 @@ $rootOU = "OU=$NewOUname"
 $DefinitiveDC = "DC=$dc1,DC=$dc2"
 $rootarray = @('Utilisateurs','Ordinateurs','Groupes','Ressources','Partages')
 
-####################################
-# Création des unités d'organisation principales : celles de $rootarray complétées avec le fichier .csv "nom_OU.csv" (var $tabOU)
+################################################
+# Création des unités d'organisation principales
 Write-Host " "
 Write-Host "/!\ Étape n°2 : Création de l'arborescence en dessous de cette racine --> voir ligne suivante :"
 Write-Host "            Plusieurs OU de base : Ordinateurs, Utilisateurs, Groupes, Partages, Ressources"
@@ -102,18 +102,61 @@ Write-Host "/!\ Etape n°5 : Création d'une OU et de 4 DL correspondant à un p
 do {
     $choice = Read-Host "Faut-il ajouter des partages ? Oui (O), Non (N)"
 } until ($choice -match '^[ON]+$')
-    if ($choice -eq "O") {
-        CreateAGDLPShare
+if ($choice -eq "O") {
+    CreateAGDLPShare
+}
+
+###################################################
+# Création de modèle(s) d'utilisateur(s) du domaine 
+do {
+    do {
+        Write-Host "0 - Sortie"
+        Write-Host "1 - Ajouter un modèle d'utilisateur à la main"
+        Write-Host "2 - Ajouter plusieurs modèles d'utilisateurs grâce à un fichier .csv"
+        Write-Host ""
+        $choice = Read-Host "Votre choix"
+        $ok = $choice -match '^[012]+$'
+
+        if (-not $ok) {
+            Write-Host "Entrée invalide, veuillez recommencer"
+        }
+    } until ($ok)
+switch ($choice) {
+    "1" {
+        CreateUserTemplate
     }
+    "2" {
+        CreateMultipleUserTemplate
+    }
+}
+} until ($choice -match '^[0]+$')
 
 ######################################
-# Création des utilisateurs du domaine
+# Création d'un/des utilisateur(s) du domaine
 Write-Host ""
 Write-Host "/!\ Etape n°6 : Création des utilisateurs et inclusion dans les bons groupes"
-$tabusers = Import-csv -Path .\new_users.csv -delimiter ";" # Importation du tableau contenant les utilisateurs à ajouter, dans les bonnes OU
-foreach ($item in $tabusers) {
+do {
+    do {
+        Write-Host "0 - Sortie"
+        Write-Host "1 - Ajouter un utilisateur à la main"
+        Write-Host "2 - Ajouter plusieurs utilisateurs grâce à un fichier .csv"
+        Write-Host ""
+        $choice = Read-Host "Votre choix"
+        $ok = $choice -match '^[012]+$'
 
+        if (-not $ok) {
+            Write-Host "Entrée invalide, veuillez recommencer"
+        }
+    } until ($ok)
+switch ($choice) {
+    "1" {
+        CreateUser
+    }
+    "2" {
+        CreateMultipleUser
+    }
 }
+} until ($choice -match '^[0]+$')
 
 ExitScript
 
