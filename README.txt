@@ -1,4 +1,4 @@
-﻿**************************************************************************************************
+**************************************************************************************************
 À lire avant de commencer :
 
   . Il est conseillé d'exécuter ce programme sur un annuaire Active Directory venant tout juste d'être installé. Il peut en effet y avoir des conflits sur la création des groupes par exemple, notamment s'ils existent déjà. 
