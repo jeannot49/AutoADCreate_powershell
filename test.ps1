@@ -1,11 +1,16 @@
 # Inclusion de la librairie de fonctions
 . .\Library_CreateAD.ps1
 
+function CreateSimpleUser{
+    
+}
+
 $arobase = "@"
 $name = Read-Host "Entrez votre prenom "
 $surname = Read-Host "Entrez votre nom de famille "
 $samaccname = Read-Host "Entrez un nom de login (premiere lettre du prenom suivie du nom. Ex : hdupont "
-$password = Read-Host "Entrer un mot de passe "
+#$response = Read-host "What's your password?" -AsSecureString 
+$password = Read-Host -Prompt "Entrez votre mot de passe " -AsSecureString
 $description = Read-Host "Description du compte "
 $OUusers = "OU=Utilisateurs,OU=Agence,DC=guitton,DC=fr"
 $dnsroot = (Get-ADDomain).dnsroot
@@ -19,7 +24,7 @@ New-ADUser `
 -Surname $surname `
 -SamAccountName $samaccname `
 -UserPrincipalName $upn `
--AccountPassword (ConvertTo-SecureString -AsPlainText $password -Force) `
+-AccountPassword $password `
 -Description $description `
 -Company (Get-ADDomain).NetBIOSName `
 -Path $OUusers `
