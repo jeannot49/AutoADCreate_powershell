@@ -1,9 +1,12 @@
 ﻿<#
 Date de création :          2019-01-24 à 16:44
 Auteur           :          Jean Guitton
-Sources          :          Microsoft Technet, Stack Overflow, Chaine Youtube Editions ENI
-Version          :          1.0.3
-Dernière modif.  :          2019-01-27 à 21:27
+Sources          :          - Microsoft Technet
+                            - Stack Overflow
+                            - Chaine Youtube Editions ENI
+                            - https://www.sqlshack.com/how-to-secure-your-passwords-with-powershell/
+Version          :          1.0.4
+Dernière modif.  :          2019-01-28 à 17:05
 #>
 
 ###############################
