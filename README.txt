@@ -19,14 +19,16 @@ Remarque importante :
 **************************************************************************************************
 Mises à jour :
 
-V1.0.0 : 	Création de la structure de bases d'UO (Types de ressources, services, matériel 
-		etc.) grâce au fichier new_OU.csv
-V1.0.1 : 	Fonction d'ajout de groupes (Domaine local, global et universel)
-		Ajout de groupes grâce au fichier new_groups.csv
-		Ajout de DL spécifiques à AGDLP
-V1.0.2 :	Fonctionnalité de vérification d'erreur : codage UTF-8 requis
-		Menu principal réduit si l'utilisateur ne respecte pas les spécifications
-		Correction de soucis d'affichage
+V1.0.0 : Création de la structure de bases d'UO (Types de ressources, services, matériel 
+		 etc.) grâce au fichier new_OU.csv
+V1.0.1 : Fonction d'ajout de groupes (Domaine local, global et universel)
+		 Ajout de groupes grâce au fichier new_groups.csv
+		 Ajout de DL spécifiques à AGDLP
+V1.0.2 : Fonctionnalité de vérification d'erreur : codage UTF-8 requis
+		 Menu principal réduit si l'utilisateur ne respecte pas les spécifications
+		 Correction de soucis d'affichage
+V1.0.4 : Fonctionnalité d'ajout simple d'un utilisateur
+		 Refonte de l'en-tête pour correspondre aux sources multiples
 **************************************************************************************************
 À faire :
   . Ajout des comptes utilisateurs modèles

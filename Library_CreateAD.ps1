@@ -254,7 +254,7 @@ function CreateAGDLPShare {
 
 ##########################################
 # Création simple d'un utilisateur de l'AD
-function CreateSimpleUser{
+function CreateSimpleUser {
     Param (
         [Parameter(Mandatory=$true, Position=0)]
         [string] $Name,                                 # Attribut GivenName de l'utilisateur dans l'AD
