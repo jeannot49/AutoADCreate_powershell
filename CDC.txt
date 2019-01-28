@@ -32,21 +32,6 @@ Créer des modèles d'utilisateurs
 			. Attributs département, job
 		Si l'utilisateur est placé dans l'OU, il sera automatiquement ajouté au
 		  groupe correspondant
-
-New-ADUser `
--Company (Get-ADDomain).NetBIOSName `                                       # Champ : Company
--DisplayName 'Jean Guitton' `                                               # Nom/prénom affiché à l'utilisateur
--GivenName 'Jean' `                                                         # Prénom
--Name 'Jean Guitton' `                                                      # Nom du compte
--Surname 'Guitton' `                                                        # Nom de famille
--SamAccountName 'jguitton' `
-    # Nom du compte sans la partie @domaine, habituellement composé de la première lettre du prénom 
-    # puis du nom de famille
--UserPrincipalName 'jguitton@domaine.fr' `                                  # Nom de login + @domaine
--AccountPassword (ConvertTo-SecureString -AsPlainText Pa$$w0rd -Force) `    # Mot de passe
--Description 'Compte utilisateur modèle pour le service' `                  # Description       
--Path 'OU=Utilisateurs,OU=Agence,DC=guitton,DC=fr' `                        # Situation dans l'AD
--Verbose `
 		
 	- Via CSV
 		Import du fichier
