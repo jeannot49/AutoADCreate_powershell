@@ -294,7 +294,7 @@ On peut créer un utilisateur grâce à la commande :
 ##################################
 # Création d'un utilisateur modèle
 function CreateUserTemplate {
-    
+    CreateSimpleUser -Name <name> -Surname <surname> -SamAccName <samaccname> -Description <description>
 }
 
 ######################################################
