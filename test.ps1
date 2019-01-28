@@ -2,7 +2,10 @@
 . .\Library_CreateAD.ps1
 
 function CreateSimpleUser{
-    
+    Param (
+        [Parameter(Mandatory=$true, Position=0)]
+        [string] $name
+    )
 }
 
 $arobase = "@"
