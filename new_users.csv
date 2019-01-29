@@ -1,30 +1,33 @@
-Service	Pr�nom	Nom	Statut
-Direction	Paul 	Astreide	Responsable
-Direction	Catherine 	Tramell	Secretaire
-Direction	John 	Connor	Membre
-Direction	Jean-Claude 	Dusse	Membre
-Commercial	Axel 	Foley	Responsable
-Commercial	Daisy 	Duke	Secretaire
-Commercial	Molly 	Jensen	Membre
-Commercial	Pete 	Mitchell	Membre
-Comptabilite	Peter 	Parker	Responsable
-Comptabilite	Claire 	Bennet	Secretaire
-Comptabilite	Jack 	Sparrow	Membre
-Comptabilite	Chandler 	Bing	Membre
-Informatique	Thomas 	Anderson	Responsable
-Informatique	Philippe 	Abrams	Secretaire
-Informatique	Emmet 	Brown	Informatique
-Informatique	Han  	Solo	Informatique
-Informatique	Jean	Guitton	Informatique
-RnD	Bruce 	Wayne	Responsable
-RnD	Clarice  	Starling	Secretaire
-RnD	John 	Mc Lane	Membre
-RnD	Keyser 	S�ze	Membre
-Production	G�rard 	Lambert	Responsable
-Production	Just 	Leblanc	Secretaire
-Production	Fran�ois 	Pignon	Membre
-Production	Korben 	Dallas	Membre
-Securite	Martin 	Riggs	Responsable
-Securite	Ellen 	Ripley	Secretaire
-Securite	Dominic 	Toretto	Membre
-Securite	Harry 	Callahan	Membre
+﻿Name;GivenName;Surname;Department;UserPrincipalName;password;modele;
+Joseph Marie;Joseph Marie;Parent;commerciaux;JParent@teddy.local;P@ssw0rd;modele_commerciaux;modele_commerciaux
+Augustin Charbonneau;Augustin;Charbonneau;commerciaux;ACharbonneau@teddy.local;P@ssw0rd;modele_commerciaux;
+Genevieve Martin;Genevieve;Martin;commerciaux;GMartin@teddy.local;P@ssw0rd;modele_commerciaux;
+Jean Giroux;Jean Marie;Giroux;commerciaux;JGiroux@teddy.local;P@ssw0rd;modele_commerciaux;
+Gabriel Leduc;Gabriel;Leduc;commerciaux;GLeduc@teddy.local;P@ssw0rd;modele_commerciaux;
+Jean Roy;Jean Baptiste;Roy;Direction;JRoy@teddy.local;P@ssw0rd;modele_commerciaux;
+Joseph Ouellet;Joseph;Ouellet;Direction;JOuellet@teddy.local;P@ssw0rd;modele_commerciaux;
+Marie Gauthier;Marie Josephe;Gauthier;Direction;MGauthier@teddy.local;P@ssw0rd;modele_commerciaux;
+Antoine Côté;Antoine;Côté;Info;ACôté@teddy.local;P@ssw0rd;modele_commerciaux;
+Marie Cloutier;Marie;Cloutier;Info;MCloutier@teddy.local;P@ssw0rd;modele_commerciaux;
+Marie Dubois;Marie;Dubois;comptabilite;MDubois@teddy.local;P@ssw0rd;modele_commerciaux;
+Marie Boucher;Marie;Boucher;comptabilite;MBoucher@teddy.local;P@ssw0rd;modele_commerciaux;
+Marguerite Fortin;Marguerite;Fortin;comptabilite;MFortin@teddy.local;P@ssw0rd;modele_commerciaux;
+Jean Archambault;Jean;Archambault;secretaires;JArchambault@teddy.local;P@ssw0rd;modele_commerciaux;
+Catherine Leclerc;Catherine;Leclerc;secretaires;CLeclerc@teddy.local;P@ssw0rd;modele_commerciaux;
+Marie Allard;Marie;Allard;secretaires;MAllard@teddy.local;P@ssw0rd;modele_commerciaux;
+Etienne Langlois;Etienne;Langlois;secretaires;ELanglois@teddy.local;P@ssw0rd;modele_commerciaux;
+Elisabeth Bouchard;Elisabeth;Bouchard;r&d;EBouchard@teddy.local;P@ssw0rd;modele_commerciaux;
+Alexis Renaud;Alexis;Renaud;secretaires;ARenaud@teddy.local;P@ssw0rd;modele_commerciaux;
+Angelique Tessier;Angelique;Tessier;secretaires;ATessier@teddy.local;P@ssw0rd;modele_commerciaux;
+Andre Fournier;Andre;Fournier;r&d;AFournier@teddy.local;P@ssw0rd;modele_commerciaux;
+Nicolas Robert;Nicolas;Robert;r&d;NRobert@teddy.local;P@ssw0rd;modele_commerciaux;
+Francoise Caron;Francoise;Caron;r&d;FCaron@teddy.local;P@ssw0rd;modele_commerciaux;
+Jean Beaudouin;Jean;Beaudouin;secretaires;JBeaudouin@teddy.local;P@ssw0rd;modele_commerciaux;
+Louise Tremblay;Louise;Tremblay;comptabilite;LTremblay@teddy.local;P@ssw0rd;modele_commerciaux;
+Marie Amable Petit;Marie Amable;Petit;comptabilite;MPetit@teddy.local;P@ssw0rd;modele_commerciaux;
+Paul Perrault;Paul;Perrault;comptabilite;PPerrault@teddy.local;P@ssw0rd;modele_commerciaux;
+Marie Louise Gagnon;Marie Louise;Gagnon;secretaires;MGagnon@teddy.local;P@ssw0rd;modele_commerciaux;
+Francois Richard;Francois;Richard;R&D;FRichard@teddy.local;P@ssw0rd;modele_commerciaux;
+Louis Lefebvre;Louis;Lefebvre;R&D;LLefebvre@teddy.local;P@ssw0rd;modele_commerciaux;
+Marie Anne Hébert;Marie Anne;Hébert;R&D;MHébert@teddy.local;P@ssw0rd;modele_commerciaux;
+Marie Morin;Marie;Morin;R&D;MMorin@teddy.local;P@ssw0rd;modele_commerciaux;
