@@ -294,7 +294,7 @@ On peut créer un utilisateur grâce à la commande :
 ##################################
 # Création d'un utilisateur modèle
 function CreateUserTemplate {
-    CreateSimpleUser -Name <name> -Surname <surname> -SamAccName <samaccname> -Description <description>
+    
 }
 
 ######################################################
@@ -309,7 +309,11 @@ function CreateMultipleUserTemplate {
 #####################################
 # Création d'un utilisateur dans l'AD
 function CreateUser {
-
+    $username = Read-Host "Entrez un nom d'utilisateur "
+    $usersurname = Read-Host "Entrez un nom de famille "
+    $usersamaccname = Read-Host "Entrez un nom de login, de la forme : Prenom Nom --> pnom "
+    $userdescription = Read-Host "Entrez une description pour l'utilisateur "
+    CreateSimpleUser -Name $username -Surname $usersurname -SamAccName $usersamaccname -Description $userdescription
 }
 
 ####################################
