@@ -35,6 +35,10 @@ Créer des modèles d'utilisateurs
 		
 	- Via CSV
 		Import du fichier
-		Création grâces à l'extraction des viariables			
+		Création grâces à l'extraction des viariables	
 
-Créer des modèles et y inclure les groupes
+Création d'utilisateurs
+	- A la main
+		Demander les informations à l'utilisateur
+		Le laisser choisir l'OU
+	- Via CSV
