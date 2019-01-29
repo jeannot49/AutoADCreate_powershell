@@ -244,10 +244,10 @@ function CreateAGDLPShare {
     $sharename = Read-Host "Nom du partage "
     Write-Host ""
     $addomain = (Get-ADDomain).NetBIOSName
+    $dlpath = (Get-ADOrganizationalUnit -Filter "name -like 'Domaines locaux'").distinguishedname
     $completesharename = "$addomain$uds$sharename"
     $oudlsharename = "$dl$uds$completesharename$uds"
     $oudlsharepath = "$ou$egal$dl$uds$completesharename$coma$dlpath"
-    $dlpath = (Get-ADOrganizationalUnit -Filter "name -like 'Domaines locaux'").distinguishedname
     New-ADOrganizationalUnit -Name $dl$uds$completesharename -Path $dlpath -ProtectedFromAccidentalDeletion $false -verbose
 
     #CreateSimpleGroup -GroupName $completesharename$uds$ct -GroupScope DomainLocal
