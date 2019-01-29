@@ -1,30 +1,30 @@
-ï»¿container;givenname;surname;description;samaccname
-Direction;Paul ;Astreide;Responsable;PAstreide
-Direction;Catherine ;Tramell;Secretaire;CTramell
-Direction;John ;Connor;Membre;JConnor
-Direction;Jean-Claude ;Dusse;Membre;JDusse
-Commercial;Axel ;Foley;Responsable;AFoley
-Commercial;Daisy ;Duke;Secretaire;DDuke
-Commercial;Molly ;Jensen;Membre;MJensen
-Commercial;Pete ;Mitchell;Membre;PMitchell
-ComptabilitÃ©;Peter ;Parker;Responsable;PParker
-ComptabilitÃ©;Claire ;Bennet;Secretaire;CBennet
-ComptabilitÃ©;Jack ;Sparrow;Membre;JSparrow
-ComptabilitÃ©;Chandler ;Bing;Membre;CBing
-Informatique;Thomas ;Anderson;Responsable;TAnderson
-Informatique;Philippe ;Abrams;Secretaire;PAbrams
-Informatique;Emmet ;Brown;Administrateur;EBrown
-Informatique;Han  ;Solo;Administrateur;HSolo
-Informatique;Jean-Claude ;Guittoin;Administrateur;JGuittoin
-R&D;Bruce ;Wayne;Responsable;BWayne
-R&D;Clarice  ;Starling;Secretaire;CStarling
-R&D;John ;Mc Lane;Membre;JMc Lane
-R&D;Keyser ;SÃ¶ze;Membre;KSÃ¶ze
-Production;GÃ©rard ;Lambert;Responsable;GLambert
-Production;Just ;Leblanc;Secretaire;JLeblanc
-Production;FranÃ§ois ;Pignon;Membre;FPignon
-Production;Korben ;Dallas;Membre;KDallas
-SÃ©curitÃ©;Martin ;Riggs;Responsable;MRiggs
-SÃ©curitÃ©;Ellen ;Ripley;Secretaire;ERipley
-SÃ©curitÃ©;Dominic ;Toretto;Membre;DToretto
-SÃ©curitÃ©;Harry ;Callahan;Membre;HCallahan
+container	givenname	surname	description	samaccname
+Direction	Paul	Astreide	Responsable	PAstreide
+Direction	Catherine	Tramell	Secretaire	CTramell
+Direction	John	Connor	Membre	JConnor
+Direction	Jean-Claude	Dusse	Membre	JDusse
+Commercial	Axel	Foley	Responsable	AFoley
+Commercial	Daisy	Duke	Secretaire	DDuke
+Commercial	Molly	Jensen	Membre	MJensen
+Commercial	Pete	Mitchell	Membre	PMitchell
+Comptabilité	Peter	Parker	Responsable	PParker
+Comptabilité	Claire	Bennet	Secretaire	CBennet
+Comptabilité	Jack	Sparrow	Membre	JSparrow
+Comptabilité	Chandler	Bing	Membre	CBing
+Informatique	Thomas	Anderson	Responsable	TAnderson
+Informatique	Philippe	Abrams	Secretaire	PAbrams
+Informatique	Emmet	Brown	Administrateur	EBrown
+Informatique	Han	Solo	Administrateur	HSolo
+Informatique	Jean-Claude	Guittoin	Administrateur	JGuittoin
+R&D	Bruce	Wayne	Responsable	BWayne
+R&D	Clarice	Starling	Secretaire	CStarling
+R&D	John	Mc Lane	Membre	JMc Lane
+R&D	Keyser	Söze	Membre	KSöze
+Production	Gérard	Lambert	Responsable	GLambert
+Production	Just	Leblanc	Secretaire	JLeblanc
+Production	François	Pignon	Membre	FPignon
+Production	Korben	Dallas	Membre	KDallas
+Sécurité	Martin	Riggs	Responsable	MRiggs
+Sécurité	Ellen	Ripley	Secretaire	ERipley
+Sécurité	Dominic	Toretto	Membre	DToretto
+Sécurité	Harry	Callahan	Membre	HCallahan
