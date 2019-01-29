@@ -16,10 +16,10 @@ Informatique;Philippe;Abrams;Secretaire;PAbrams
 Informatique;Emmet;Brown;Administrateur;EBrown
 Informatique;Han;Solo;Administrateur;HSolo
 Informatique;Jean-Claude;Guittoin;Administrateur;JGuittoin
-R&D;Bruce;Wayne;Responsable;BWayne
-R&D;Clarice;Starling;Secretaire;CStarling
-R&D;John;Mc Lane;Membre;JMc Lane
-R&D;Keyser;Söze;Membre;KSöze
+RnD;Bruce;Wayne;Responsable;BWayne
+RnD;Clarice;Starling;Secretaire;CStarling
+RnD;John;Mc Lane;Membre;JMc Lane
+RnD;Keyser;Söze;Membre;KSöze
 Production;Gérard;Lambert;Responsable;GLambert
 Production;Just;Leblanc;Secretaire;JLeblanc
 Production;François;Pignon;Membre;FPignon
