@@ -1,33 +1,33 @@
-ï»¿Name;GivenName;Surname;Department;UserPrincipalName;password;modele;
-Joseph Marie;Joseph Marie;Parent;commerciaux;JParent@teddy.local;P@ssw0rd;modele_commerciaux;modele_commerciaux
-Augustin Charbonneau;Augustin;Charbonneau;commerciaux;ACharbonneau@teddy.local;P@ssw0rd;modele_commerciaux;
-Genevieve Martin;Genevieve;Martin;commerciaux;GMartin@teddy.local;P@ssw0rd;modele_commerciaux;
-Jean Giroux;Jean Marie;Giroux;commerciaux;JGiroux@teddy.local;P@ssw0rd;modele_commerciaux;
-Gabriel Leduc;Gabriel;Leduc;commerciaux;GLeduc@teddy.local;P@ssw0rd;modele_commerciaux;
-Jean Roy;Jean Baptiste;Roy;Direction;JRoy@teddy.local;P@ssw0rd;modele_commerciaux;
-Joseph Ouellet;Joseph;Ouellet;Direction;JOuellet@teddy.local;P@ssw0rd;modele_commerciaux;
-Marie Gauthier;Marie Josephe;Gauthier;Direction;MGauthier@teddy.local;P@ssw0rd;modele_commerciaux;
-Antoine CÃ´tÃ©;Antoine;CÃ´tÃ©;Info;ACÃ´tÃ©@teddy.local;P@ssw0rd;modele_commerciaux;
-Marie Cloutier;Marie;Cloutier;Info;MCloutier@teddy.local;P@ssw0rd;modele_commerciaux;
-Marie Dubois;Marie;Dubois;comptabilite;MDubois@teddy.local;P@ssw0rd;modele_commerciaux;
-Marie Boucher;Marie;Boucher;comptabilite;MBoucher@teddy.local;P@ssw0rd;modele_commerciaux;
-Marguerite Fortin;Marguerite;Fortin;comptabilite;MFortin@teddy.local;P@ssw0rd;modele_commerciaux;
-Jean Archambault;Jean;Archambault;secretaires;JArchambault@teddy.local;P@ssw0rd;modele_commerciaux;
-Catherine Leclerc;Catherine;Leclerc;secretaires;CLeclerc@teddy.local;P@ssw0rd;modele_commerciaux;
-Marie Allard;Marie;Allard;secretaires;MAllard@teddy.local;P@ssw0rd;modele_commerciaux;
-Etienne Langlois;Etienne;Langlois;secretaires;ELanglois@teddy.local;P@ssw0rd;modele_commerciaux;
-Elisabeth Bouchard;Elisabeth;Bouchard;r&d;EBouchard@teddy.local;P@ssw0rd;modele_commerciaux;
-Alexis Renaud;Alexis;Renaud;secretaires;ARenaud@teddy.local;P@ssw0rd;modele_commerciaux;
-Angelique Tessier;Angelique;Tessier;secretaires;ATessier@teddy.local;P@ssw0rd;modele_commerciaux;
-Andre Fournier;Andre;Fournier;r&d;AFournier@teddy.local;P@ssw0rd;modele_commerciaux;
-Nicolas Robert;Nicolas;Robert;r&d;NRobert@teddy.local;P@ssw0rd;modele_commerciaux;
-Francoise Caron;Francoise;Caron;r&d;FCaron@teddy.local;P@ssw0rd;modele_commerciaux;
-Jean Beaudouin;Jean;Beaudouin;secretaires;JBeaudouin@teddy.local;P@ssw0rd;modele_commerciaux;
-Louise Tremblay;Louise;Tremblay;comptabilite;LTremblay@teddy.local;P@ssw0rd;modele_commerciaux;
-Marie Amable Petit;Marie Amable;Petit;comptabilite;MPetit@teddy.local;P@ssw0rd;modele_commerciaux;
-Paul Perrault;Paul;Perrault;comptabilite;PPerrault@teddy.local;P@ssw0rd;modele_commerciaux;
-Marie Louise Gagnon;Marie Louise;Gagnon;secretaires;MGagnon@teddy.local;P@ssw0rd;modele_commerciaux;
-Francois Richard;Francois;Richard;R&D;FRichard@teddy.local;P@ssw0rd;modele_commerciaux;
-Louis Lefebvre;Louis;Lefebvre;R&D;LLefebvre@teddy.local;P@ssw0rd;modele_commerciaux;
-Marie Anne HÃ©bert;Marie Anne;HÃ©bert;R&D;MHÃ©bert@teddy.local;P@ssw0rd;modele_commerciaux;
-Marie Morin;Marie;Morin;R&D;MMorin@teddy.local;P@ssw0rd;modele_commerciaux;
+name	givenname	surname	container	upn
+Joseph Marie	Joseph Marie	Parent	Commercial	JParent
+Augustin Charbonneau	Augustin	Charbonneau	Commercial	ACharbonneau
+Genevieve Martin	Genevieve	Martin	Commercial	GMartin
+Jean Giroux	Jean Marie	Giroux	Commercial	JGiroux
+Gabriel Leduc	Gabriel	Leduc	Commercial	GLeduc
+Jean Roy	Jean Baptiste	Roy	Direction	JRoy
+Joseph Ouellet	Joseph	Ouellet	Direction	Jouellet
+Marie Gauthier	Marie Josephe	Gauthier	Direction	MGauthier
+Antoine Côté	Antoine	Côté	Info	ACôté
+Marie Cloutier	Marie	Cloutier	Info	MCloutier
+Marie Dubois	Marie	Dubois	Comptabilite	MDubois
+Marie Boucher	Marie	Boucher	Comptabilite	MBoucher
+Marguerite Fortin	Marguerite	Fortin	Comptabilite	MFortin
+Jean Archambault	Jean	Archambault	secretaires	JArchambault
+Catherine Leclerc	Catherine	Leclerc	secretaires	CLeclerc
+Marie Allard	Marie	Allard	secretaires	MAllard
+Etienne Langlois	Etienne	Langlois	secretaires	ELanglois
+Elisabeth Bouchard	Elisabeth	Bouchard	r&d	EBouchard
+Alexis Renaud	Alexis	Renaud	secretaires	ARenaud
+Angelique Tessier	Angelique	Tessier	secretaires	ATessier
+Andre Fournier	Andre	Fournier	r&d	AFournier
+Nicolas Robert	Nicolas	Robert	r&d	NRobert
+Francoise Caron	Francoise	Caron	r&d	FCaron
+Jean Beaudouin	Jean	Beaudouin	secretaires	JBeaudouin
+Louise Tremblay	Louise	Tremblay	Comptabilite	LTremblay
+Marie Amable Petit	Marie Amable	Petit	Comptabilite	MPetit
+Paul Perrault	Paul	Perrault	Comptabilite	PPerrault
+Marie Louise Gagnon	Marie Louise	Gagnon	secretaires	MGagnon
+Francois Richard	Francois	Richard	R&D	FRichard
+Louis Lefebvre	Louis	Lefebvre	R&D	LLefebvre
+Marie Anne Hébert	Marie Anne	Hébert	R&D	MHébert
+Marie Morin	Marie	Morin	R&D	MMorin
