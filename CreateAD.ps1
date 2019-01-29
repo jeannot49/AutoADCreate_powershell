@@ -5,8 +5,8 @@ Sources          :          - Microsoft Technet
                             - Stack Overflow
                             - Chaine Youtube Editions ENI
                             - https://www.sqlshack.com/how-to-secure-your-passwords-with-powershell/
-Version          :          1.0.4
-Dernière modif.  :          2019-01-28 à 17:05
+Version          :          1.0.6
+Dernière modif.  :          2019-01-30 à 00:07
 #>
 
 ###############################
@@ -17,16 +17,16 @@ Dernière modif.  :          2019-01-28 à 17:05
 #========================== Worker ==========================
 #============================================================
 
+###############################################################
+# Exécution de différentes vérifications essentielles au script
+ExecuteVerifications
+
 #############################
 # Affichage du Menu principal
 Write-Host " "
 Write-Host "!!!!!  IMPORTANT  !!!!! "
 Write-Host "S'il s'agit de la premiere execution de ce script dans l'annuaire, veuillez selectionner l'option (1)"
 PrincipalMenu
-
-###############################################################
-# Exécution de différentes vérifications essentielles au script
-ExecuteVerifications
 
 ####################################
 # Demandes d'informations du domaine
@@ -40,8 +40,7 @@ Write-Host " "
 Write-Host "/!\ Étape n°1 : Créer l'OU racine, elle accueillera toutes les OU du domaine"
 $NewOUname = Read-Host "Entrez le nom de l'OU racine du domaine "
 Write-Host " "
-Write-Host "Avant de continuer, veuillez cosulter le fichier nommé README.txt"
-
+Write-Host "Avant de continuer, veuillez consulter le fichier nommé README.txt"
 # /!\ TODO : Automatiser cette partie autant que possible
 
 ##########################
@@ -144,6 +143,12 @@ switch ($choice) {
 
 #############################################
 # Création d'un/des utilisateur(s) du domaine
+Write-Host "/!\ Etape n°6.2 : Création d'un ou de plusieurs utilisateur(s) au sein du domaine"
+PrincipalMenuUsers
+
+<#
+#############################################
+# Création d'un/des utilisateur(s) du domaine
 Write-Host ""
 Write-Host "/!\ Etape n°6 : Création des utilisateurs et inclusion dans les bons groupes"
 do {
@@ -168,7 +173,7 @@ switch ($choice) {
     }
 }
 } until ($choice -match '^[0]+$')
-
+#>
 ExitScript
 
 #===================================================================

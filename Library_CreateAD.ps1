@@ -5,20 +5,13 @@ Sources          :          - Microsoft Technet
                             - Stack Overflow
                             - Chaine Youtube Editions ENI
                             - https://www.sqlshack.com/how-to-secure-your-passwords-with-powershell/
-Version          :          1.0.4
-Dernière modif.  :          2019-01-28 à 17:05
+Version          :          1.0.6
+Dernière modif.  :          2019-01-30 à 00:08
 #>
 
 #==================================================================
 #========================== Library file ==========================
 #==================================================================
-
-###################################
-# Déclaration de variables globales
-$global:coma = ","
-$global:rootOU = "OU=$NewOUname"
-$global:DefinitiveDC = "DC=$dc1,DC=$dc2"
-$global:rootarray = @('Utilisateurs','Ordinateurs','Groupes','Ressources','Partages')
 
 ############################################################
 # Teste la présence d'un module ou non dans le système local
@@ -102,7 +95,7 @@ function PrincipalMenu {
     Write-Host "|          3. Creer des groupes a la main               |"
     Write-Host "|          4. Creer des groupes via .csv                |"
     Write-Host "|          5. Creer DL et partages                      |"
-    Write-Host "|          6. Creer des utilisateurs                    |"
+    Write-Host "|          6. Creer des utilisateurs/modeles            |"
     Write-Host "|          7. Sortir                                    |"
     Write-Host "|_______________________________________________________|"
 
@@ -143,7 +136,7 @@ function PrincipalMenu {
         "6" {
             # /!\ À remettre
             #Start-Transcript
-            CreateUser
+            PrincipalMenuUsers
             PrincipalMenu
         }
         "7" {
@@ -277,19 +270,71 @@ function CreateSimpleUser {
     $usersdn = (Get-ADOrganizationalUnit -Filter "name -like 'Utilisateurs'").distinguishedname
     $companyname = (Get-ADDomain).NetBIOSName
     $arobase = "@"
-    $password = Read-Host -Prompt "Entrez votre mot de passe " -AsSecureString
+    #$password = Read-Host -Prompt "Entrez votre mot de passe " -AsSecureString
     $dnsroot = (Get-ADDomain).dnsroot
     $upn = "$samaccname$arobase$dnsroot"                # Attribut UserPrincipalName de l'utilisateur dans l'AD
     $fullname = "$name $surname"                        # Attribut Name de l'utilisateur dans l'AD
     
-    New-ADUser -DisplayName "$fullname" -GivenName "$name" -Name "$fullname" -Surname "$surname" -SamAccountName "$samaccname" -UserPrincipalName "$upn" -AccountPassword $password -Description "$description" -Company "$companyname" -Path "OU=$Container$coma$usersdn" -Enabled 1 -Verbose
+    New-ADUser `
+        -DisplayName "$fullname" `
+        -GivenName "$name" `
+        -Name "$fullname" `
+        -Surname "$surname" `
+        -SamAccountName "$samaccname" `
+        -UserPrincipalName "$upn" `
+        -Description "$description" `
+        -Company "$companyname" `
+        -Path "OU=$Container$coma$usersdn" `
+        -Department "$container" `
+        -ChangePasswordAtLogon 1 `
+        -PasswordNotRequired 1 `
+        -Enabled 1 `
+        -Verbose
     Write-Host ""
+    #-AccountPassword $password `
 # /!\ TODO : Vérifier que le mot de passe n'est plus stocké dans une variable après la fin du script
 
-<# Remarque :
+<# Remarque
 On peut créer un utilisateur grâce à la commande :
     - CreateSimpleUser -Name <name> -Surname <surname> -SamAccName <samaccname> -Description <description> -Container <OU>
 #>
+}
+
+function PrincipalMenuUsers {
+    Write-Host "_________________________________________________________"
+    Write-Host "|                                                       |"
+    Write-Host "|          1. Creer un utilisateur a la main            |"
+    Write-Host "|          2. Creer des utilisateur via .csv            |"
+    Write-Host "|          3. Creer un modele a la main                 |"
+    Write-Host "|          4. Creer des modeles via .csv                |"
+    Write-Host "|          5. Ne rien faire                             |"
+    Write-Host "|_______________________________________________________|"
+
+    do {
+        Write-Host ""
+        $taskusers = Read-Host "Entrez le numero de la tache a executer "
+    } until ($taskusers -match '^[12345]+$')
+    switch ($taskusers) {
+        "1" {
+            CreateUser
+            PrincipalMenuUsers 
+        }
+        "2" {
+            CreateMultipleUser
+            PrincipalMenuUsers
+        }
+        "3" {
+            CreateUserTemplate
+            PrincipalMenuUsers
+        }
+        "4" {
+            CreateMultipleUserTemplate
+            PrincipalMenuUsers
+        }
+        "5" {
+            Write-Host "Le script va continuer..."
+        }
+    }
 }
 
 ##################################
@@ -301,9 +346,10 @@ function CreateUserTemplate {
 ######################################################
 # Création de plusieurs comptes d'utilisateurs modèles
 function CreateMultipleUserTemplate {
-    $tabusers = Import-csv -Path .\new_users.csv -delimiter ";" # Importation du tableau contenant les utilisateurs à ajouter, dans les bonnes OU
-    foreach ($item in $tabusers) {
+    $tabusertemplate = Import-csv -Path .\new_usertemplates.csv -delimiter ";" # Importation du tableau contenant les modèles d'utilisateurs à ajouter, dans les bonnes OU
+    foreach ($item in $tabusertemplate) {
 
+    # /!\ TODO : Réaliser un tableau Excel facilitant la construction des tous les attributs sans erreur
     }
 }
 
@@ -322,7 +368,30 @@ function CreateUser {
 ####################################
 # Création de plusieurs utilisateurs
 function CreateMultipleUser {
+    $tabusers = Import-csv -Path .\new_users.csv -delimiter ";" # Importation du tableau contenant les utilisateurs à ajouter, dans les bonnes OU
+    $oudomain = (Get-ADDomain).distinguishedname
+    $usersdn = (Get-ADOrganizationalUnit -Filter "name -like 'Utilisateurs'").distinguishedname
+    Write-Host ""
+    foreach ($item in $tabusers) {
+        $username = $item.givenname
+        $usersurname = $item.surname
+        $usercontainer = $item.container
+        $userdescription = $item.description
+        $usersamaccname = $item.samaccname
 
+        # Vérification de l'existence de l'utilisateur puis ajout s'il n'est pas déjà présent
+        $is_existing = (Get-ADUser -Filter "samaccountname -like '$usersamaccname'" -SearchBase "$oudomain").name
+        if ($is_existing -eq $null) {
+            CreateSimpleUser -Name $username -Surname $usersurname -SamAccName $usersamaccname -Description $userdescription -Container $usercontainer
+        }
+        else {
+            Write-Host "L'utilisateur $is_existing existe deja dans l'annuaire"
+            Write-Host ""
+        }
+        #Write-Host ""
+        # /!\ TODO : Réaliser un tableau Excel facilitant la construction des tous les attributs sans erreur
+        # Concatener afin d'avoir un SamAccountName dans Excel : =MINUSCULE(CONCATENER(GAUCHE(B2;1);C2))
+    }
 }
 
 #####################################################
@@ -339,6 +408,7 @@ function DisplayErrorMessage {
 function ExitScript {
     Write-Host "Fin du script..." 
 # /!\ À remettre    Stop-Transcript
+# /!\ Prévenir des Timeout afin que l'utilisateur n'aie pas l'impression d'un plantage
     Wait-Event -Timeout 3
     Exit
 }
