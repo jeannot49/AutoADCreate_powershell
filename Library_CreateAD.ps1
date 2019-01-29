@@ -163,7 +163,6 @@ function CreateOUStructure {
         # Création des OU demandées dans le fichier "new_OU.csv"
         New-ADOrganizationalUnit -Name $oucreate -Path $oupath -ProtectedFromAccidentalDeletion $false -verbose
     }
-    Write-Host ""
 }
 
 ############################################
@@ -172,7 +171,6 @@ function CreateSecurityGroup {
 $groupname = Read-Host "Saisissez le nom du groupe "
 $groupcategory = 'Security'
     do {
-        Write-Host ""
         $choice = Read-Host "Etendue du groupe : Domaine local (1), Global (2), Universel (3) "
     } until ($choice -match '^[123]+$')
     switch ($choice) {                           # Switch qui attribue les variables $groupscope et $grouppath en fonction du choix réalisé plus haut
@@ -203,7 +201,6 @@ $groupcategory = 'Security'
 function CreateMultipleSecurityGroup {
     $tabgroup = Import-Csv -Path .\new_groups.csv -delimiter ";"    # Création des groupes nommés dans "new_groups.csv"
     $groupcategory = 'Security'
-    Write-Host ""
     foreach ($item in $tabgroup) {
     $groupname = $item.name
     $groupscope = $item.groupscope
@@ -227,6 +224,7 @@ function CreateMultipleSecurityGroup {
     # Ajout des groupes dans l'OU correspondante
     New-ADGroup -DisplayName $secgroupprefix$groupname -Name $secgroupprefix$groupname -GroupCategory $groupcategory -GroupScope $groupscope -Path $grouppath -Verbose
     }
+Write-Host ""
 }
 
 ########################################
@@ -257,6 +255,7 @@ function CreateAGDLPShare {
     New-ADGroup -Name "$oudlsharename$r" -DisplayName "$oudlsharename$r" -GroupCategory Security -GroupScope DomainLocal -Path "$oudlsharepath" -Verbose
     Write-Host ""
     Write-Host "Vous devrez modifier les ACL au sein du serveur de fichier afin de correspondre aux DL."
+    Write-Host ""
 }
 
 ##########################################
@@ -275,19 +274,19 @@ function CreateSimpleUser {
         [string] $Container
     )
     $coma = ","
-    $rootOU = "OU=$NewOUname"
     $usersdn = (Get-ADOrganizationalUnit -Filter "name -like 'Utilisateurs'").distinguishedname
+    $companyname = (Get-ADDomain).NetBIOSName
     $arobase = "@"
     $password = Read-Host -Prompt "Entrez votre mot de passe " -AsSecureString
-    #$OUusers = "OU=Utilisateurs$coma$rootOU$coma$DefinitiveDC"         # Attribut Path de l'utilisateur dans l'AD
-    #$dnsroot = (Get-ADDomain).dnsroot
+    $dnsroot = (Get-ADDomain).dnsroot
     $upn = "$samaccname$arobase$dnsroot"                # Attribut UserPrincipalName de l'utilisateur dans l'AD
     $fullname = "$name $surname"                        # Attribut Name de l'utilisateur dans l'AD
-
-    New-ADUser -DisplayName $fullname -GivenName $name -Name $fullname -Surname $surname -SamAccountName $samaccname -UserPrincipalName $upn -AccountPassword $password -Description $description -Company (Get-ADDomain).NetBIOSName -Path "OU=$Container$coma$usersdn" -Enabled 1 -Verbose
-
+    
+    New-ADUser -DisplayName "$fullname" -GivenName "$name" -Name "$fullname" -Surname "$surname" -SamAccountName "$samaccname" -UserPrincipalName "$upn" -AccountPassword $password -Description "$description" -Company "$companyname" -Path "OU=$Container$coma$usersdn" -Enabled 1 -Verbose
+    Write-Host ""
 # /!\ TODO : Vérifier que le mot de passe n'est plus stocké dans une variable après la fin du script
-<# Remarque importante 
+
+<# Remarque :
 On peut créer un utilisateur grâce à la commande :
     - CreateSimpleUser -Name <name> -Surname <surname> -SamAccName <samaccname> -Description <description> -Container <OU>
 #>
@@ -311,13 +310,13 @@ function CreateMultipleUserTemplate {
 #####################################
 # Création d'un utilisateur dans l'AD
 function CreateUser {
-    $username = Read-Host "Entrez un prénom "
+    $username = Read-Host "Entrez un prenom "
     $usersurname = Read-Host "Entrez un nom de famille "
     $samaccname = Read-Host "Entrez un nom de login, ex : Prenom Nom --> pnom "
     $userdescription = Read-Host "Entrez une description "
     $usercontainer = Read-Host "Entrez le nom de l'OU parente "
     # Placement dans l'OU
-    CreateSimpleUser -Name $username -Surname $usersurname -SamAccName $samaccname -Description "$userdescription" -Container $usercontainer
+    CreateSimpleUser -Name $username -Surname $usersurname -SamAccName $samaccname -Description $userdescription -Container $usercontainer
 }
 
 ####################################
