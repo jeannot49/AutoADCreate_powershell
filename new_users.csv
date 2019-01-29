@@ -1,33 +1,33 @@
-name	givenname	surname	container	upn
-Joseph Marie	Joseph Marie	Parent	Commercial	JParent
-Augustin Charbonneau	Augustin	Charbonneau	Commercial	ACharbonneau
-Genevieve Martin	Genevieve	Martin	Commercial	GMartin
-Jean Giroux	Jean Marie	Giroux	Commercial	JGiroux
-Gabriel Leduc	Gabriel	Leduc	Commercial	GLeduc
-Jean Roy	Jean Baptiste	Roy	Direction	JRoy
-Joseph Ouellet	Joseph	Ouellet	Direction	Jouellet
-Marie Gauthier	Marie Josephe	Gauthier	Direction	MGauthier
-Antoine Côté	Antoine	Côté	Info	ACôté
-Marie Cloutier	Marie	Cloutier	Info	MCloutier
-Marie Dubois	Marie	Dubois	Comptabilite	MDubois
-Marie Boucher	Marie	Boucher	Comptabilite	MBoucher
-Marguerite Fortin	Marguerite	Fortin	Comptabilite	MFortin
-Jean Archambault	Jean	Archambault	secretaires	JArchambault
-Catherine Leclerc	Catherine	Leclerc	secretaires	CLeclerc
-Marie Allard	Marie	Allard	secretaires	MAllard
-Etienne Langlois	Etienne	Langlois	secretaires	ELanglois
-Elisabeth Bouchard	Elisabeth	Bouchard	r&d	EBouchard
-Alexis Renaud	Alexis	Renaud	secretaires	ARenaud
-Angelique Tessier	Angelique	Tessier	secretaires	ATessier
-Andre Fournier	Andre	Fournier	r&d	AFournier
-Nicolas Robert	Nicolas	Robert	r&d	NRobert
-Francoise Caron	Francoise	Caron	r&d	FCaron
-Jean Beaudouin	Jean	Beaudouin	secretaires	JBeaudouin
-Louise Tremblay	Louise	Tremblay	Comptabilite	LTremblay
-Marie Amable Petit	Marie Amable	Petit	Comptabilite	MPetit
-Paul Perrault	Paul	Perrault	Comptabilite	PPerrault
-Marie Louise Gagnon	Marie Louise	Gagnon	secretaires	MGagnon
-Francois Richard	Francois	Richard	R&D	FRichard
-Louis Lefebvre	Louis	Lefebvre	R&D	LLefebvre
-Marie Anne Hébert	Marie Anne	Hébert	R&D	MHébert
-Marie Morin	Marie	Morin	R&D	MMorin
+ï»¿name;givenname;surname;container;upn
+Joseph Marie;Joseph Marie;Parent;Commercial;JParent
+Augustin Charbonneau;Augustin;Charbonneau;Commercial;ACharbonneau
+Genevieve Martin;Genevieve;Martin;Commercial;GMartin
+Jean Giroux;Jean Marie;Giroux;Commercial;JGiroux
+Gabriel Leduc;Gabriel;Leduc;Commercial;GLeduc
+Jean Roy;Jean Baptiste;Roy;Direction;JRoy
+Joseph Ouellet;Joseph;Ouellet;Direction;Jouellet
+Marie Gauthier;Marie Josephe;Gauthier;Direction;MGauthier
+Antoine CÃ´tÃ©;Antoine;CÃ´tÃ©;Info;ACÃ´tÃ©
+Marie Cloutier;Marie;Cloutier;Info;MCloutier
+Marie Dubois;Marie;Dubois;Comptabilite;MDubois
+Marie Boucher;Marie;Boucher;Comptabilite;MBoucher
+Marguerite Fortin;Marguerite;Fortin;Comptabilite;MFortin
+Jean Archambault;Jean;Archambault;secretaires;JArchambault
+Catherine Leclerc;Catherine;Leclerc;secretaires;CLeclerc
+Marie Allard;Marie;Allard;secretaires;MAllard
+Etienne Langlois;Etienne;Langlois;secretaires;ELanglois
+Elisabeth Bouchard;Elisabeth;Bouchard;r&d;EBouchard
+Alexis Renaud;Alexis;Renaud;secretaires;ARenaud
+Angelique Tessier;Angelique;Tessier;secretaires;ATessier
+Andre Fournier;Andre;Fournier;r&d;AFournier
+Nicolas Robert;Nicolas;Robert;r&d;NRobert
+Francoise Caron;Francoise;Caron;r&d;FCaron
+Jean Beaudouin;Jean;Beaudouin;secretaires;JBeaudouin
+Louise Tremblay;Louise;Tremblay;Comptabilite;LTremblay
+Marie Amable Petit;Marie Amable;Petit;Comptabilite;MPetit
+Paul Perrault;Paul;Perrault;Comptabilite;PPerrault
+Marie Louise Gagnon;Marie Louise;Gagnon;secretaires;MGagnon
+Francois Richard;Francois;Richard;R&D;FRichard
+Louis Lefebvre;Louis;Lefebvre;R&D;LLefebvre
+Marie Anne HÃ©bert;Marie Anne;HÃ©bert;R&D;MHÃ©bert
+Marie Morin;Marie;Morin;R&D;MMorin
