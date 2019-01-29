@@ -1,4 +1,4 @@
-**************************************************************************************************
+﻿**************************************************************************************************
 À lire avant de commencer :
 
   . Il est conseillé d'exécuter ce programme sur un annuaire Active Directory venant tout juste d'être installé. Il peut en effet y avoir des conflits sur la création des groupes par exemple, notamment s'ils existent déjà. 
@@ -29,6 +29,9 @@ V1.0.2 : Fonctionnalité de vérification d'erreur : codage UTF-8 requis
 		 Correction de soucis d'affichage
 V1.0.4 : Fonctionnalité d'ajout simple d'un utilisateur
 		 Refonte de l'en-tête pour correspondre aux sources multiples
+V1.0.5 : Fonction CreateUser fonctionnelle
+		 Modifications esthétiques du script pendant son déroulement
+		 Correction de bug sur la fonction d'ajout de Groupes/DL (AGDLP)
 **************************************************************************************************
 À faire :
   . Ajout des comptes utilisateurs modèles
