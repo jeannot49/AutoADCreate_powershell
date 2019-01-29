@@ -13,23 +13,23 @@ Dernière modif.  :          2019-01-28 à 17:05
 # Appel au fichier de fonctions
 . .\Library_CreateAD.ps1
 
-###############################################################
-# Exécution de différentes vérifications essentielles au script
-ExecuteVerifications
-
 #============================================================
 #========================== Worker ==========================
 #============================================================
 
 #############################
 # Affichage du Menu principal
+Write-Host " "
+Write-Host "!!!!!  IMPORTANT  !!!!! "
+Write-Host "S'il s'agit de la premiere execution de ce script dans l'annuaire, veuillez selectionner l'option (1)"
 PrincipalMenu
+
+###############################################################
+# Exécution de différentes vérifications essentielles au script
+ExecuteVerifications
 
 ####################################
 # Demandes d'informations du domaine
-Write-Host " "
-Write-Host "!!!!!  IMPORTANT  !!!!! "
-Write-Host "S'il s'agit de la premiere fois dans cet annuaire, il est conseille d'executer tout le script une fois, via l'option (6)"
 Write-Host " "
 Write-Host "Description du script :"
 Write-Host " "
@@ -41,6 +41,8 @@ Write-Host "/!\ Étape n°1 : Créer l'OU racine, elle accueillera toutes les OU
 $NewOUname = Read-Host "Entrez le nom de l'OU racine du domaine "
 Write-Host " "
 Write-Host "Avant de continuer, veuillez cosulter le fichier nommé README.txt"
+
+# /!\ TODO : Automatiser cette partie autant que possible
 
 ##########################
 # Déclaration de variables
@@ -86,6 +88,7 @@ do {
 
         if (-not $ok) {
             Write-Host "Entrée invalide, veuillez recommencer"
+            Write-Host ""
         }
     } until ($ok)
 switch ($choice) {
@@ -97,6 +100,11 @@ switch ($choice) {
     }
 }
 } until ($choice -match '^[0]+$')
+
+<# 
+/!\ TODO : Proposer à l'utilisateur de créer des groupes, ou non, mais le prévenir que l'absence de groupe pourra provoquer des erreurs si l'on souhaite
+ajouter des utilisateurs dans ces groupes
+#>
 
 ######################################################################################
 # Création des partages et de 4 DL (AGDLP), 1 OU par partage dans l'OU "Domaine local"
@@ -134,7 +142,7 @@ switch ($choice) {
 }
 } until ($choice -match '^[0]+$')
 
-######################################
+#############################################
 # Création d'un/des utilisateur(s) du domaine
 Write-Host ""
 Write-Host "/!\ Etape n°6 : Création des utilisateurs et inclusion dans les bons groupes"
