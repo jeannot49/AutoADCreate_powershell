@@ -33,7 +33,3 @@ V1.0.5 : Fonction CreateUser fonctionnelle
 		 Modifications esthétiques du script pendant son déroulement
 		 Correction de bug sur la fonction d'ajout de Groupes/DL (AGDLP)
 **************************************************************************************************
-À faire :
-  . Ajout des comptes utilisateurs modèles
-  . Gestion des logs
-  . Vérifier que l'OU racine mentionnée dans le fichier Excel est le même que celui noté en début      de script
