@@ -251,10 +251,10 @@ function CreateAGDLPShare {
     New-ADOrganizationalUnit -Name $dl$uds$completesharename -Path $dlpath -ProtectedFromAccidentalDeletion $false -verbose
 
     #CreateSimpleGroup -GroupName $completesharename$uds$ct -GroupScope DomainLocal
-    New-ADGroup -Name "$oudlsharename$ct" -DisplayName "$oudlsharename$ct" -GroupCategory Security -GroupScope DomainLocal -Path $oudlsharepath -Verbose
-    New-ADGroup -Name "$oudlsharename$m" -DisplayName "$oudlsharename$m" -GroupCategory Security -GroupScope DomainLocal -Path $oudlsharepath -Verbose
-    New-ADGroup -Name "$oudlsharename$l" -DisplayName "$oudlsharename$l" -GroupCategory Security -GroupScope DomainLocal -Path $oudlsharepath -Verbose
-    New-ADGroup -Name "$oudlsharename$r" -DisplayName "$oudlsharename$r" -GroupCategory Security -GroupScope DomainLocal -Path $oudlsharepath -Verbose
+    New-ADGroup -Name "$oudlsharename$ct" -DisplayName "$oudlsharename$ct" -GroupCategory Security -GroupScope DomainLocal -Path "$oudlsharepath" -Verbose
+    New-ADGroup -Name "$oudlsharename$m" -DisplayName "$oudlsharename$m" -GroupCategory Security -GroupScope DomainLocal -Path "$oudlsharepath" -Verbose
+    New-ADGroup -Name "$oudlsharename$l" -DisplayName "$oudlsharename$l" -GroupCategory Security -GroupScope DomainLocal -Path "$oudlsharepath" -Verbose
+    New-ADGroup -Name "$oudlsharename$r" -DisplayName "$oudlsharename$r" -GroupCategory Security -GroupScope DomainLocal -Path "$oudlsharepath" -Verbose
     Write-Host ""
     Write-Host "Vous devrez modifier les ACL au sein du serveur de fichier afin de correspondre aux DL."
 }
@@ -311,7 +311,6 @@ function CreateMultipleUserTemplate {
 #####################################
 # Création d'un utilisateur dans l'AD
 function CreateUser {
-<<<<<<< HEAD
     $username = Read-Host "Entrez un prénom "
     $usersurname = Read-Host "Entrez un nom de famille "
     $samaccname = Read-Host "Entrez un nom de login, ex : Prenom Nom --> pnom "
@@ -319,13 +318,6 @@ function CreateUser {
     $usercontainer = Read-Host "Entrez le nom de l'OU parente "
     # Placement dans l'OU
     CreateSimpleUser -Name $username -Surname $usersurname -SamAccName $samaccname -Description "$userdescription" -Container $usercontainer
-=======
-    $username = Read-Host "Entrez un nom d'utilisateur "
-    $usersurname = Read-Host "Entrez un nom de famille "
-    $usersamaccname = Read-Host "Entrez un nom de login, de la forme : Prenom Nom --> pnom "
-    $userdescription = Read-Host "Entrez une description pour l'utilisateur "
-    CreateSimpleUser -Name $username -Surname $usersurname -SamAccName $usersamaccname -Description $userdescription
->>>>>>> 2bd4da9ab3b9c27bf7bce4fe0a28b9f135ddf2ca
 }
 
 ####################################
