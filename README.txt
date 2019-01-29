@@ -12,7 +12,7 @@ Les 4 fichiers .csv à remplir sont donc
 	- new_users.csv
 
 Il vous sera demandé dans le script de bien vérifier que les champs sont remplis correctement.
-En effet, cette partie est essentielle pour le bon déroulement de la procédure. Si une/des erreur(s) survient(nent), pensez en premier lieu à vérifier ces fichiers.
+En effet, cette partie est essentielle pour le bon déroulement de la procédure. Si une erreur survient, pensez en premier lieu à vérifier ces fichiers.
 
 Remarque importante : 
 
@@ -32,4 +32,6 @@ V1.0.4 : Fonctionnalité d'ajout simple d'un utilisateur
 V1.0.5 : Fonction CreateUser fonctionnelle
 		 Modifications esthétiques du script pendant son déroulement
 		 Correction de bug sur la fonction d'ajout de Groupes/DL (AGDLP)
+V1.0.6 : Ajout de la fonction de création d'utilisateurs via un fichier csv
+		 Modification de l'encodage des fichiers Excel afin de supporter l'UTF-8
 **************************************************************************************************
