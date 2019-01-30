@@ -34,4 +34,9 @@ V1.0.5 : Fonction CreateUser fonctionnelle
 		 Correction de bug sur la fonction d'ajout de Groupes/DL (AGDLP)
 V1.0.6 : Ajout de la fonction de création d'utilisateurs via un fichier csv
 		 Modification de l'encodage des fichiers Excel afin de supporter l'UTF-8
+V1.0.7 : Amélioration des fonctions de groupes : vérification de l'existence avant d'ajouter
+		 Création d'un Menu Utilisateur et Groupes dans des boites
+		 Test de la fonction d'ajout d'un utilisateur à un groupe
+		 Nettoyage général du code, suppression des commentaires inutiles et ajout de nouveaux
+		 	. Commentaire des fonctions à compléter
 **************************************************************************************************
