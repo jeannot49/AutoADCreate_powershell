@@ -146,34 +146,8 @@ switch ($choice) {
 Write-Host "/!\ Etape n°6.2 : Création d'un ou de plusieurs utilisateur(s) au sein du domaine"
 PrincipalMenuUsers
 
-<#
-#############################################
-# Création d'un/des utilisateur(s) du domaine
-Write-Host ""
-Write-Host "/!\ Etape n°6 : Création des utilisateurs et inclusion dans les bons groupes"
-do {
-    do {
-        Write-Host "0 - Sortie"
-        Write-Host "1 - Ajouter un utilisateur à la main"
-        Write-Host "2 - Ajouter plusieurs utilisateurs grâce à un fichier .csv"
-        Write-Host ""
-        $choice = Read-Host "Votre choix"
-        $ok = $choice -match '^[012]+$'
-
-        if (-not $ok) {
-            Write-Host "Entrée invalide, veuillez recommencer"
-        }
-    } until ($ok)
-switch ($choice) {
-    "1" {
-        CreateUser
-    }
-    "2" {
-        CreateMultipleUser
-    }
-}
-} until ($choice -match '^[0]+$')
-#>
+##################
+# Sortie du script
 ExitScript
 
 #===================================================================

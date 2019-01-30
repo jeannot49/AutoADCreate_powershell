@@ -183,7 +183,6 @@ $groupcategory = 'Security'
             $grouppath = (Get-ADOrganizationalUnit -Filter "name -like 'Groupes universels'").distinguishedname
         }
     }
-
 # Ajout des groupes dans l'OU correspondante
     New-ADGroup -DisplayName $secgroupprefix$groupname -Name $secgroupprefix$groupname -GroupCategory $groupcategory -GroupScope $groupscope -Path $grouppath -Verbose
     Write-Host ""
@@ -407,8 +406,8 @@ function DisplayErrorMessage {
 # Sortir du script
 function ExitScript {
     Write-Host "Fin du script..." 
-# /!\ À remettre    Stop-Transcript
-# /!\ Prévenir des Timeout afin que l'utilisateur n'aie pas l'impression d'un plantage
+# /!\ À remettre Stop-Transcript
+# /!\ TODO : Prévenir des Timeout afin que l'utilisateur n'aie pas l'impression d'un plantage
     Wait-Event -Timeout 3
     Exit
 }

@@ -1,44 +1,73 @@
-Créer des groupes de sécurité
-	- à la main
+ï»¿CrÃ©er des groupes de sÃ©curitÃ©
+	- Ã€ la main
 		groupcategory = security
 		groupscope = choix entre 3
 		path = en fonction de groupscope, placement dans l'une des OU sous l'OU "Groupes"
-	- Basé sur un CSV
+	- BasÃ© sur un CSV
 		Importer le CSV
-		Demander à l'utilisateur entre GroupScope DomainLocal, Global ou Universal
+		Demander Ã  l'utilisateur entre GroupScope DomainLocal, Global ou Universal
 
 
-Créer des groupes de domaine local
-	- Basé sur un nom de partage
-		Création de DL_<domaine>_<partage>_CT
-		Création de DL_<domaine>_<partage>_M
-		Création de DL_<domaine>_<partage>_L
-		Création de DL_<domaine>_<partage>_R
+CrÃ©er des groupes de domaine local
+	- BasÃ© sur un nom de partage
+		CrÃ©ation de DL_<domaine>_<partage>_CT
+		CrÃ©ation de DL_<domaine>_<partage>_M
+		CrÃ©ation de DL_<domaine>_<partage>_L
+		CrÃ©ation de DL_<domaine>_<partage>_R
 
-Créer des partages et les DL
+CrÃ©er des partages et les DL
 	Demander le nom du partage
-	Créer les 4 DL y correspondant
-	Créer les groupes, dans la bonne UO
-	Prévenir l'utilisateur de modifier les ACL sur le serveur de fichiers
+	CrÃ©er les 4 DL y correspondant
+	CrÃ©er les groupes, dans la bonne UO
+	PrÃ©venir l'utilisateur de modifier les ACL sur le serveur de fichiers
 
-Créer des modèles d'utilisateurs
-	En créer un ou plusieurs via CSV ?
+CrÃ©er des modÃ¨les d'utilisateurs
+	En crÃ©er un ou plusieurs via CSV ?
 	- A la main
-		Demander les informations à l'utilisateur
+		Demander les informations Ã  l'utilisateur
 			. Nom
 			. Mot de passe etc.
 			. Groupe d'appartenance
-				. lister les groupes du modèle associé et les ajouter
-			. Attributs département, job
-		Si l'utilisateur est placé dans l'OU, il sera automatiquement ajouté au
+				. lister les groupes du modÃ¨le associÃ© et les ajouter
+			. Attributs dÃ©partement, job
+		Si l'utilisateur est placÃ© dans l'OU, il sera automatiquement ajoutÃ© au
 		  groupe correspondant
 		
 	- Via CSV
 		Import du fichier
-		Création grâces à l'extraction des viariables	
+		CrÃ©ation grÃ¢ce Ã  l'extraction des variables	
 
-Création d'utilisateurs
+CrÃ©ation d'utilisateurs
 	- A la main
-		Demander les informations à l'utilisateur
+		Demander les informations Ã  l'utilisateur
 		Le laisser choisir l'OU
 	- Via CSV
+
+
+Ã€ faire : 
+- CrÃ©er un Excel plus "convivial" pour la CrÃ©ation des OU qui gÃ©nÃ¨re un .csv compatible avec le script
+CreateOUStructure
+
+- CrÃ©ation de groupe automatique en fonction du nom des OU dans l'OU Utilisateurs
+
+- Proposer Ã  l'utilisateur de crÃ©er des groupes, ou non, mais le prÃ©venir que l'absence de groupe pourra provoquer des erreurs si l'on souhaite
+ajouter des utilisateurs dans ces groupes
+
+- VÃ©rifier que l'utilisateur a bien rempli tous les fichiers .csv
+
+- VÃ©rifier que le mot de passe n'est plus stockÃ© dans une variable aprÃ¨s la fin du script
+
+- RÃ©aliser un tableau Excel facilitant la construction des tous les attributs sans erreur
+
+- RÃ©aliser un tableau Excel facilitant la construction des tous les attributs sans erreur
+	. Concatener afin d'avoir un SamAccountName dans Excel : =MINUSCULE(CONCATENER(GAUCHE(B2;1);C2))
+
+- PrÃ©venir des Timeout afin que l'utilisateur n'aie pas l'impression d'un plantage
+
+- ProcÃ©dure complÃ¨te dans un fichier README_DETAILED.txt
+
+- S'adapter aux niveaux d'arborescence du domaine (plus de 3 niveaux) DOMAINE > Agence > Utilisateurs etc...
+
+- Pouvoir crÃ©er une arborescence similaire (ex : IntÃ©rimaires, Membres, Directeurs) de maniÃ¨re rÃ©pÃ©titives dans une OU
+
+- 
