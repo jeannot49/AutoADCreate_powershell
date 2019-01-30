@@ -25,11 +25,11 @@ Créer des modèles d'utilisateurs
 	En créer un ou plusieurs via CSV ?
 	- A la main
 		Demander les informations à l'utilisateur
-			. Nom
-			. Mot de passe etc.
-			. Groupe d'appartenance
+			. Nom																: mod.<nom>.<OU de service>
+			. Mot de passe etc.													: pas de mot de passe
+			. Groupe d'appartenance												: utilise une fonction d'ajout à des groupes
 				. lister les groupes du modèle associé et les ajouter
-			. Attributs département, job
+			. Attributs département, job										: maximum d'attributs
 		Si l'utilisateur est placé dans l'OU, il sera automatiquement ajouté au
 		  groupe correspondant
 		
@@ -43,7 +43,13 @@ Création d'utilisateurs
 		Le laisser choisir l'OU
 	- Via CSV
 
+#######################################################################################################################################
+Prioritaire :
+- Création de groupes du même nom que les OU dans l'OU "Groupes globaux" <-- Création d'une VM WS2016
 
+- Intégrer des utilisateurs à des groupes et des groupes dans des groupes, le faire via le fichier csv d'ajout des utilisateurs si possible
+
+#######################################################################################################################################
 À faire : 
 - Créer un Excel plus "convivial" pour la Création des OU qui génère un .csv compatible avec le script
 CreateOUStructure
@@ -69,5 +75,11 @@ ajouter des utilisateurs dans ces groupes
 - S'adapter aux niveaux d'arborescence du domaine (plus de 3 niveaux) DOMAINE > Agence > Utilisateurs etc...
 
 - Pouvoir créer une arborescence similaire (ex : Intérimaires, Membres, Directeurs) de manière répétitives dans une OU
+
+- Vérifier la version de Powershell : tests à réaliser sur WS2016, WS2012, 2012R2, 2008
+
+- Tant que le script n'est pas exécuté, continuer le "Transcript" (logs)
+
+- Refaire les menus principaux dans étapes 4 & 5
 
 - 
