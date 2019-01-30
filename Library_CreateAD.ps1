@@ -2,9 +2,10 @@
 Date de création :          2019-01-24 à 16:44
 Auteur           :          Jean Guitton
 Sources          :          - Microsoft Technet
-                            - Stack Overflow
-                            - Chaine Youtube Editions ENI
+                            - Stack Overflow Topics
+                                . Load variables from another powershell script
                             - https://www.sqlshack.com/how-to-secure-your-passwords-with-powershell/
+                            - https://www.itprotoday.com/powershell/powershell-one-liner-creating-and-modifying-environment-variable
 Version          :          1.0.6
 Dernière modif.  :          2019-01-30 à 00:08
 #>
@@ -35,6 +36,7 @@ function Test-Module
 function ExecuteVerifications {
     SetUTF8
     #/!\ TODO : Vérifier que l'utilisateur a bien rempli tous les fichiers .csv
+    #/!\ TODO : Vérifier la version de Powershell : tests à réaliser sur WS2008, WS2008R2, WS2012, WS2012R2, WS2016
 }
 
 ######################################################################
@@ -103,39 +105,28 @@ function PrincipalMenu {
         Write-Host ""
         $task = Read-Host "Entrez le numero de la tache a executer "
     } until ($task -match '^[1234567]+$')
+    #Start-Transcript
     switch ($task) {
         "1" {
-            # /!\ À remettre
-            #Start-Transcript
             Write-Host "Le script va continuer..."
         }
         "2" {
-            # /!\ À remettre
-            #Start-Transcript
             CreateOUStructure
             PrincipalMenu
         }
         "3" {
-            # /!\ À remettre
-            #Start-Transcript
             CreateSecurityGroup
             PrincipalMenu
         }
         "4" {
-            # /!\ À remettre
-            #Start-Transcript
             CreateMultipleSecurityGroup
             PrincipalMenu
         }
         "5" {
-            # /!\ À remettre
-            #Start-Transcript
             CreateAGDLPShare
             PrincipalMenu
         }
         "6" {
-            # /!\ À remettre
-            #Start-Transcript
             PrincipalMenuUsers
             PrincipalMenu
         }
@@ -222,12 +213,6 @@ Write-Host ""
 ########################################
 # Création de partage (1 OU et ses 4 DL)
 function CreateAGDLPShare {
-    $dl = "DL"
-    $ct = "CT"
-    $m = "M"
-    $l = "L"
-    $r = "R"
-    $ou = "OU"
     $uds = "_"
     $coma = ","
     $egal = "="
@@ -236,15 +221,15 @@ function CreateAGDLPShare {
     $addomain = (Get-ADDomain).NetBIOSName
     $dlpath = (Get-ADOrganizationalUnit -Filter "name -like 'Domaines locaux'").distinguishedname
     $completesharename = "$addomain$uds$sharename"
-    $oudlsharename = "$dl$uds$completesharename$uds"
-    $oudlsharepath = "$ou$egal$dl$uds$completesharename$coma$dlpath"
-    New-ADOrganizationalUnit -Name $dl$uds$completesharename -Path $dlpath -ProtectedFromAccidentalDeletion $false -verbose
+    $oudlsharename = "DL$uds$completesharename$uds"
+    $oudlsharepath = "OU=DL$uds$completesharename$coma$dlpath"
+    New-ADOrganizationalUnit -Name "DL$uds$completesharename" -Path $dlpath -ProtectedFromAccidentalDeletion $false -verbose
 
-    #CreateSimpleGroup -GroupName $completesharename$uds$ct -GroupScope DomainLocal
-    New-ADGroup -Name "$oudlsharename$ct" -DisplayName "$oudlsharename$ct" -GroupCategory Security -GroupScope DomainLocal -Path "$oudlsharepath" -Verbose
-    New-ADGroup -Name "$oudlsharename$m" -DisplayName "$oudlsharename$m" -GroupCategory Security -GroupScope DomainLocal -Path "$oudlsharepath" -Verbose
-    New-ADGroup -Name "$oudlsharename$l" -DisplayName "$oudlsharename$l" -GroupCategory Security -GroupScope DomainLocal -Path "$oudlsharepath" -Verbose
-    New-ADGroup -Name "$oudlsharename$r" -DisplayName "$oudlsharename$r" -GroupCategory Security -GroupScope DomainLocal -Path "$oudlsharepath" -Verbose
+    # Création des groupes de domaine locaux
+    New-ADGroup -Name $oudlsharename"CT" -DisplayName $oudlsharename"CT" -GroupCategory Security -GroupScope DomainLocal -Path $oudlsharepath -Verbose
+    New-ADGroup -Name $oudlsharename"M" -DisplayName $oudlsharename"M" -GroupCategory Security -GroupScope DomainLocal -Path $oudlsharepath -Verbose
+    New-ADGroup -Name $oudlsharename"L" -DisplayName $oudlsharename"L" -GroupCategory Security -GroupScope DomainLocal -Path $oudlsharepath -Verbose
+    New-ADGroup -Name $oudlsharename"R" -DisplayName $oudlsharename"R" -GroupCategory Security -GroupScope DomainLocal -Path $oudlsharepath -Verbose
     Write-Host ""
     Write-Host "Vous devrez modifier les ACL au sein du serveur de fichier afin de correspondre aux DL."
     Write-Host ""
@@ -291,12 +276,7 @@ function CreateSimpleUser {
         -Verbose
     Write-Host ""
     #-AccountPassword $password `
-# /!\ TODO : Vérifier que le mot de passe n'est plus stocké dans une variable après la fin du script
-
-<# Remarque
-On peut créer un utilisateur grâce à la commande :
-    - CreateSimpleUser -Name <name> -Surname <surname> -SamAccName <samaccname> -Description <description> -Container <OU>
-#>
+        # /!\ ATTENTION : Dans ce cas, vérifier que le mot de passe n'est plus stocké dans une variable après la fin du script
 }
 
 function PrincipalMenuUsers {
@@ -406,7 +386,8 @@ function DisplayErrorMessage {
 # Sortir du script
 function ExitScript {
     Write-Host "Fin du script..." 
-# /!\ À remettre Stop-Transcript
+# /!\ À remettre 
+    #Stop-Transcript
 # /!\ TODO : Prévenir des Timeout afin que l'utilisateur n'aie pas l'impression d'un plantage
     Wait-Event -Timeout 3
     Exit

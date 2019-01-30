@@ -2,9 +2,10 @@
 Date de création :          2019-01-24 à 16:44
 Auteur           :          Jean Guitton
 Sources          :          - Microsoft Technet
-                            - Stack Overflow
-                            - Chaine Youtube Editions ENI
+                            - Stack Overflow Topics
+                                . Load variables from another powershell script
                             - https://www.sqlshack.com/how-to-secure-your-passwords-with-powershell/
+                            - https://www.itprotoday.com/powershell/powershell-one-liner-creating-and-modifying-environment-variable
 Version          :          1.0.6
 Dernière modif.  :          2019-01-30 à 00:07
 #>
@@ -45,9 +46,9 @@ Write-Host "Avant de continuer, veuillez consulter le fichier nommé README.txt"
 
 ##########################
 # Déclaration de variables
-$coma = ","
-$rootOU = "OU=$NewOUname"
-$DefinitiveDC = "DC=$dc1,DC=$dc2"
+$Global:coma = ","
+$Global:rootOU = "OU=$NewOUname"
+$Global:DefinitiveDC = "DC=$dc1,DC=$dc2"
 $rootarray = @('Utilisateurs','Ordinateurs','Groupes','Ressources','Partages')
 
 ################################################
@@ -116,34 +117,9 @@ if ($choice -eq "O") {
     CreateAGDLPShare
 }
 
-###################################################
-# Création de modèle(s) d'utilisateur(s) du domaine 
-do {
-    do {
-        Write-Host "0 - Sortie"
-        Write-Host "1 - Ajouter un modèle d'utilisateur à la main"
-        Write-Host "2 - Ajouter plusieurs modèles d'utilisateurs grâce à un fichier .csv"
-        Write-Host ""
-        $choice = Read-Host "Votre choix"
-        $ok = $choice -match '^[012]+$'
-
-        if (-not $ok) {
-            Write-Host "Entrée invalide, veuillez recommencer"
-        }
-    } until ($ok)
-switch ($choice) {
-    "1" {
-        CreateUserTemplate
-    }
-    "2" {
-        CreateMultipleUserTemplate
-    }
-}
-} until ($choice -match '^[0]+$')
-
 #############################################
 # Création d'un/des utilisateur(s) du domaine
-Write-Host "/!\ Etape n°6.2 : Création d'un ou de plusieurs utilisateur(s) au sein du domaine"
+Write-Host "/!\ Etape n°6 : Création d'un ou de plusieurs utilisateur(s) au sein du domaine"
 PrincipalMenuUsers
 
 ##################
