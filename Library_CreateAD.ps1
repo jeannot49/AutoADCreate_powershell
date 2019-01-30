@@ -1,4 +1,4 @@
-<#
+﻿<#
 Date de création :          2019-01-24 à 16:44
 Auteur           :          Jean Guitton
 Sources          :          - Microsoft Technet
@@ -6,8 +6,8 @@ Sources          :          - Microsoft Technet
                                 . Load variables from another powershell script
                             - https://www.sqlshack.com/how-to-secure-your-passwords-with-powershell/
                             - https://www.itprotoday.com/powershell/powershell-one-liner-creating-and-modifying-environment-variable
-Version          :          1.0.6
-Dernière modif.  :          2019-01-30 à 00:08
+Version          :          1.0.7
+Dernière modif.  :          2019-01-31 à 00:34
 #>
 
 #==================================================================
@@ -45,7 +45,7 @@ function SetUTF8 {
     $detected = $PSDefaultParameterValues['Out-File:Encoding']
     if ($detected -like 'utf8') {
         Write-Host ""
-        Write-Host "La codage par defaut est $detected, le script peut continuer... "
+        Write-Host "La codage par défaut est $detected, le script peut continuer... "
     }
     else {
         do {
@@ -68,12 +68,12 @@ function SetUTF8 {
 function PrincipalMenuReduced {
     Write-Host "_________________________________________________________"
     Write-Host "|                                                       |"
-    Write-Host "|          1. Executer les verifications                |"
-    Write-Host "|          2. Sortir                                    |"
+    Write-Host "|       1. Exécuter les vérifications                   |"
+    Write-Host "|       2. Sortir                                       |"
     Write-Host "|_______________________________________________________|"
 do {
         Write-Host ""
-        $task = Read-Host "Entrez le numero de la tache a executer "
+        $task = Read-Host "Entrez le numéro de la tâche à exécuter "
     } until ($task -match '^[12]+$')
     switch ($task) {
         "1" {
@@ -92,18 +92,18 @@ do {
 function PrincipalMenu {
     Write-Host "_________________________________________________________"
     Write-Host "|                                                       |"
-    Write-Host "|          1. Executer tout le script                   |"
-    Write-Host "|          2. Creer une structure d'OU via .csv         |"
-    Write-Host "|          3. Creer des groupes a la main               |"
-    Write-Host "|          4. Creer des groupes via .csv                |"
-    Write-Host "|          5. Creer DL et partages                      |"
-    Write-Host "|          6. Creer des utilisateurs/modeles            |"
-    Write-Host "|          7. Sortir                                    |"
-    Write-Host "|_______________________________________________________|"
+    Write-Host "|       1. Exécuter tout le script                      |"
+    Write-Host "|       2. Créer une structure d'OU via .csv            |"
+    Write-Host "|       3. Créer des groupes                            |"
+    Write-Host "|       4. Créer Groupes DL et OU                       |"
+    Write-Host "|       5. Créer des utilisateurs/modeles               |"
+    Write-Host "|       6. Sortir                                       |"
+    Write-Host "|                                                       |"
+    Write-Host "|____M E N U      P R I N C I P A L_____________________|"
 
     do {
         Write-Host ""
-        $task = Read-Host "Entrez le numero de la tache a executer "
+        $task = Read-Host "Entrez le numéro de la tâche à exécuter "
     } until ($task -match '^[1234567]+$')
     #Start-Transcript
     switch ($task) {
@@ -115,23 +115,23 @@ function PrincipalMenu {
             PrincipalMenu
         }
         "3" {
-            CreateSecurityGroup
+            PrincipalMenuGroups
             PrincipalMenu
         }
         "4" {
-            CreateMultipleSecurityGroup
-            PrincipalMenu
-        }
-        "5" {
             CreateAGDLPShare
             PrincipalMenu
         }
-        "6" {
+        "5" {
             PrincipalMenuUsers
             PrincipalMenu
         }
-        "7" {
+        "6" {
             ExitScript
+            PrincipalMenu
+        }
+        "7" {
+            
         }
     }
 }
@@ -146,31 +146,58 @@ function CreateOUStructure {
     
         # Création des OU demandées dans le fichier "new_OU.csv"
         New-ADOrganizationalUnit -Name $oucreate -Path $oupath -ProtectedFromAccidentalDeletion $false -verbose
+        Write-Host ""
+    }
+}
+function PrincipalMenuGroups {
+    Write-Host "_________________________________________________________"
+    Write-Host "|                                                       |"
+    Write-Host "|       1. Créer des groupes a la main                  |"
+    Write-Host "|       2. Créer des groupes via .csv                   |"
+    Write-Host "|       3. Ne rien faire                                |"
+    Write-Host "|                                                       |"
+    Write-Host "|____M E N U      G R O U P E S_________________________|"
+    
+    do {
+        Write-Host ""
+        $taskusers = Read-Host "Entrez le numéro de la tâche à exécuter "
+    } until ($taskusers -match '^[12345]+$')
+    switch ($taskusers) {
+        "1" {
+            CreateSecurityGroupByHand
+            PrincipalMenuUsers 
+        }
+        "2" {
+            CreateMultipleSecurityGroup
+            PrincipalMenuUsers
+        }
+        "3" {
+            Write-Host "Le script va continuer..."
+        }
     }
 }
 
-############################################
-# Création d'un groupe de sécurité à la main
-function CreateSecurityGroup {
-$groupname = Read-Host "Saisissez le nom du groupe "
-$groupcategory = 'Security'
-    do {
-        $choice = Read-Host "Etendue du groupe : Domaine local (1), Global (2), Universel (3) "
-    } until ($choice -match '^[123]+$')
-    switch ($choice) {                           # Switch qui attribue les variables $groupscope et $grouppath en fonction du choix réalisé plus haut
-        "1" {
+################################
+# Création d'un groupe de simple
+function CreateSimpleGroup {
+        Param (
+        [Parameter(Mandatory=$true, Position=0)]
+        [string] $GroupName,
+        [Parameter(Mandatory=$true, Position=0)]
+        [string] $GroupScope
+    )
+    $groupcategory = 'Security'
+    switch ($GroupScope) {                           # Attribution des variables $secgroupprefix et $grouppath en fonction des paramètres passés plus haut
+        "DomainLocal" {
             $secgroupprefix = 'DL_'
-            $groupscope = 'DomainLocal'
             $grouppath = (Get-ADOrganizationalUnit -Filter "name -like 'Domaines locaux'").distinguishedname
         }
-        "2" {
+        "Global" {
             $secgroupprefix = 'G_'
-            $groupscope = 'Global'
             $grouppath = (Get-ADOrganizationalUnit -Filter "name -like 'Groupes globaux'").distinguishedname
         }
-        "3" {
+        "Universal" {
             $secgroupprefix = 'U_'
-            $groupscope = 'Universal'
             $grouppath = (Get-ADOrganizationalUnit -Filter "name -like 'Groupes universels'").distinguishedname
         }
     }
@@ -179,33 +206,90 @@ $groupcategory = 'Security'
     Write-Host ""
 }
 
+##################################################################
+# Vérifie si un groupe existe déjà ou non, auquel cas il le crééra
+function CheckandAddGroup {
+	Param (
+        [Parameter(Mandatory=$true, Position=0)]
+		[string] $Name,
+		[Parameter(Mandatory=$true, Position=0)]
+		[string] $Scope
+    )
+    $uds = "_"
+        switch ($Scope) {
+        "1" {
+            $base = "DL$uds$Name"
+        }
+        "2" {
+            $base = "G$uds$Name"
+        }
+        "3" {
+            $base = "U$uds$Name"
+        }
+    }
+    $result = (Get-ADGroup -Filter {Name -like $base}).name
+    if ($base -eq $result) {
+        Write-Host ""
+		Write-Host "Le groupe $base existe, il n'a pas besoin d'etre ajouté"
+	}
+	else {
+        switch ($Scope) {                           # Switch qui attribue la variable $groupscope en fonction de la valeur passée en paramètre
+			"1" {
+				$groupscope = "DomainLocal"
+			}
+			"2" {
+				$groupscope = "Global"
+			}
+			"3" {
+				$groupscope = "Universal"
+            }   
+        }
+        CreateSimpleGroup -GroupName $Name -GroupScope $groupscope
+	}
+}
+
+############################################
+# Création d'un groupe de sécurité à la main
+function CreateSecurityGroupByHand {
+    $groupname = Read-Host "Saisissez le nom du groupe "
+    do {
+        $groupscope = Read-Host "Étendue du groupe : Domaine local (1), Global (2), Universel (3) "
+    } until ($groupscope -match '^[123]+$')
+
+    CheckandAddGroup -Name $groupname -Scope $groupscope
+}
+
 ######################################################################
 # Création de plusieurs groupes de sécurité à partir d'un fichier .csv
 function CreateMultipleSecurityGroup {
     $tabgroup = Import-Csv -Path .\new_groups.csv -delimiter ";"    # Création des groupes nommés dans "new_groups.csv"
     $groupcategory = 'Security'
     foreach ($item in $tabgroup) {
-    $groupname = $item.name
-    $groupscope = $item.groupscope
+        $groupname = $item.name
+        $groupscope = $item.groupscope
         switch ($groupscope) {                           # Switch qui attribue les variables $groupscope et $grouppath en fonction du choix réalisé plus haut
             "DomainLocal" {
+                $scope = "1"
                 $secgroupprefix = 'DL_'
                 $groupscope = 'DomainLocal'
                 $grouppath = (Get-ADOrganizationalUnit -Filter "name -like 'Domaines locaux'").distinguishedname
             }
             "Global" {
+                $scope = "2"
                 $secgroupprefix = 'G_'
                 $groupscope = 'Global'
                 $grouppath = (Get-ADOrganizationalUnit -Filter "name -like 'Groupes globaux'").distinguishedname
             }
             "Universal" {
+                $scope = "3"
                 $secgroupprefix = 'U_'
                 $groupscope = 'Universal'
-               $grouppath = (Get-ADOrganizationalUnit -Filter "name -like 'Groupes universels'").distinguishedname
+                $grouppath = (Get-ADOrganizationalUnit -Filter "name -like 'Groupes universels'").distinguishedname
             }
         }
     # Ajout des groupes dans l'OU correspondante
-    New-ADGroup -DisplayName $secgroupprefix$groupname -Name $secgroupprefix$groupname -GroupCategory $groupcategory -GroupScope $groupscope -Path $grouppath -Verbose
+    #New-ADGroup -DisplayName $secgroupprefix$groupname -Name $secgroupprefix$groupname -GroupCategory $groupcategory -GroupScope $groupscope -Path $grouppath -Verbose
+    CheckandAddGroup -Name $groupname -Scope $scope
     }
 Write-Host ""
 }
@@ -282,16 +366,17 @@ function CreateSimpleUser {
 function PrincipalMenuUsers {
     Write-Host "_________________________________________________________"
     Write-Host "|                                                       |"
-    Write-Host "|          1. Creer un utilisateur a la main            |"
-    Write-Host "|          2. Creer des utilisateur via .csv            |"
-    Write-Host "|          3. Creer un modele a la main                 |"
-    Write-Host "|          4. Creer des modeles via .csv                |"
-    Write-Host "|          5. Ne rien faire                             |"
-    Write-Host "|_______________________________________________________|"
+    Write-Host "|       1. Créer un utilisateur à la main               |"
+    Write-Host "|       2. Créer des utilisateur via .csv               |"
+    Write-Host "|       3. Créer un modele à la main                    |"
+    Write-Host "|       4. Créer des modeles via .csv                   |"
+    Write-Host "|       5. Ne rien faire                                |"
+    Write-Host "|                                                       |"
+    Write-Host "|____M E N U      U T I L I S A T E U R S_______________|"
 
     do {
         Write-Host ""
-        $taskusers = Read-Host "Entrez le numero de la tache a executer "
+        $taskusers = Read-Host "Entrez le numéro de la tâche à exécuter "
     } until ($taskusers -match '^[12345]+$')
     switch ($taskusers) {
         "1" {
@@ -335,7 +420,7 @@ function CreateMultipleUserTemplate {
 #####################################
 # Création d'un utilisateur dans l'AD
 function CreateUser {
-    $username = Read-Host "Entrez un prenom "
+    $username = Read-Host "Entrez un prénom "
     $usersurname = Read-Host "Entrez un nom de famille "
     $samaccname = Read-Host "Entrez un nom de login, ex : Prenom Nom --> pnom "
     $userdescription = Read-Host "Entrez une description "
@@ -349,7 +434,6 @@ function CreateUser {
 function CreateMultipleUser {
     $tabusers = Import-csv -Path .\new_users.csv -delimiter ";" # Importation du tableau contenant les utilisateurs à ajouter, dans les bonnes OU
     $oudomain = (Get-ADDomain).distinguishedname
-    $usersdn = (Get-ADOrganizationalUnit -Filter "name -like 'Utilisateurs'").distinguishedname
     Write-Host ""
     foreach ($item in $tabusers) {
         $username = $item.givenname
@@ -360,11 +444,11 @@ function CreateMultipleUser {
 
         # Vérification de l'existence de l'utilisateur puis ajout s'il n'est pas déjà présent
         $is_existing = (Get-ADUser -Filter "samaccountname -like '$usersamaccname'" -SearchBase "$oudomain").name
-        if ($is_existing -eq $null) {
+        if ($null -eq $is_existing) {
             CreateSimpleUser -Name $username -Surname $usersurname -SamAccName $usersamaccname -Description $userdescription -Container $usercontainer
         }
         else {
-            Write-Host "L'utilisateur $is_existing existe deja dans l'annuaire"
+            Write-Host "L'utilisateur $is_existing existe déjà dans l'annuaire"
             Write-Host ""
         }
         #Write-Host ""
@@ -385,7 +469,7 @@ function DisplayErrorMessage {
 ##################
 # Sortir du script
 function ExitScript {
-    Write-Host "Fin du script..." 
+    Write-Host "Le script va se terminer dans 3 secondes..." 
 # /!\ À remettre 
     #Stop-Transcript
 # /!\ TODO : Prévenir des Timeout afin que l'utilisateur n'aie pas l'impression d'un plantage

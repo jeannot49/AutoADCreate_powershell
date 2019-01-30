@@ -6,8 +6,8 @@ Sources          :          - Microsoft Technet
                                 . Load variables from another powershell script
                             - https://www.sqlshack.com/how-to-secure-your-passwords-with-powershell/
                             - https://www.itprotoday.com/powershell/powershell-one-liner-creating-and-modifying-environment-variable
-Version          :          1.0.6
-Dernière modif.  :          2019-01-30 à 00:07
+Version          :          1.0.7
+Dernière modif.  :          2019-01-31 à 00:34
 #>
 
 ###############################
@@ -46,9 +46,9 @@ Write-Host "Avant de continuer, veuillez consulter le fichier nommé README.txt"
 
 ##########################
 # Déclaration de variables
-$Global:coma = ","
-$Global:rootOU = "OU=$NewOUname"
-$Global:DefinitiveDC = "DC=$dc1,DC=$dc2"
+$coma = ","
+$rootOU = "OU=$NewOUname"
+$DefinitiveDC = "DC=$dc1,DC=$dc2"
 $rootarray = @('Utilisateurs','Ordinateurs','Groupes','Ressources','Partages')
 
 ################################################
@@ -72,34 +72,8 @@ CreateOUStructure
 
 ##################################
 # Création des groupes de sécurité
-# Plusieurs choix possibles : 
-#   - taper 1 permet la saisie manuelle d'un groupe grâce à la fonction CreateSecurityGroup présente dans le fichier Library_CreateAD.ps1
-#   - taper 2 crée un ou plusieurs groupes de sécurité en s'appuyant sur le fichier .csv et la fonction CreateMultipleSecurityGroup
-Write-Host ""
 Write-Host "/!\ Etape n°4 : Génération des groupes via une saisie manuelle ou par le fichier 'new_groups.csv'"
-do {
-    do {
-        Write-Host "0 - Sortie"
-        Write-Host "1 - Ajouter un groupe à la main"
-        Write-Host "2 - Ajouter plusieurs groupes grâce à un fichier .csv"
-        Write-Host ""
-        $choice = Read-Host "Votre choix"
-        $ok = $choice -match '^[012]+$'
-
-        if (-not $ok) {
-            Write-Host "Entrée invalide, veuillez recommencer"
-            Write-Host ""
-        }
-    } until ($ok)
-switch ($choice) {
-    "1" {
-        CreateSecurityGroup
-    }
-    "2" {
-        CreateMultipleSecurityGroup
-    }
-}
-} until ($choice -match '^[0]+$')
+PrincipalMenuGroups
 
 <# 
 /!\ TODO : Proposer à l'utilisateur de créer des groupes, ou non, mais le prévenir que l'absence de groupe pourra provoquer des erreurs si l'on souhaite
