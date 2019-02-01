@@ -39,4 +39,11 @@ V1.0.7 : Amélioration des fonctions de groupes : vérification de l'existence a
 		 Test de la fonction d'ajout d'un utilisateur à un groupe
 		 Nettoyage général du code, suppression des commentaires inutiles et ajout de nouveaux
 		 	. Commentaire des fonctions à compléter
+V1.0.8 : Amélioration des fonctions d'utilisateurs : vérification de l'existence avant d'ajouter
+		 Nettoyage du code : mise en ordre des fonctions de la librairie
+		 Rapatriement des commandes de CreateAD.ps1 dans la librairie, au sein d'une fonction
+		    . Nom : CreateBaseStructure
+		 Automatisation de la recherche de DNSroot (ex : domain.fr)
+		 Renommage de certaines fonctions
+		 Correction de bugs mineurs : numéros en trop dans les menus
 **************************************************************************************************
