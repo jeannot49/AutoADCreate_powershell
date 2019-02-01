@@ -1,4 +1,10 @@
-﻿Créer des groupes de sécurité
+﻿Structure de base
+Création de l'OU principale (ex : Agence)
+Création d'un premier niveau d'arborescence
+Création d'un autre niveau d'arborescence sous les OU créées précédemment 
+Création des groupes appropriés
+
+Créer des groupes de sécurité
 	- À la main
 		groupcategory = security
 		groupscope = choix entre 3
@@ -6,7 +12,6 @@
 	- Basé sur un CSV
 		Importer le CSV
 		Demander à l'utilisateur entre GroupScope DomainLocal, Global ou Universal
-
 
 Créer des groupes de domaine local
 	- Basé sur un nom de partage
@@ -49,6 +54,8 @@ Prioritaire :
 
 - Intégrer des utilisateurs à des groupes et des groupes dans des groupes, le faire via le fichier csv d'ajout des utilisateurs si possible
 
+- Créer une fonction que vérifie l'existence d'un utilisateur
+
 #######################################################################################################################################
 À faire : 
 - Créer un Excel plus "convivial" pour la Création des OU qui génère un .csv compatible avec le script
@@ -82,4 +89,22 @@ ajouter des utilisateurs dans ces groupes
 
 - Refaire les menus principaux dans étapes 4 & 5
 
-- 
+- Vérifier qu'un utilisateur n'existe pas avant de l'ajouter
+
+- Demander à l'utilisateur le nombre d'utilisateurs/groupes à ajouter à la main, les inclure dans un tableau et tout ajouter d'un coup dans l'AD
+
+- Proposer des OU de base (sous l'OU racine) personnalisées. Les variables devront alors être réutilisables dans les fonctions
+
+- Lors de la fonction de création d'utilisateur CreateUser, afficher les OU parentes disponibles
+
+- Afficher les valeurs d'un tableau (des noms d'OU par exemple) et les afficher sous forme sélectionnable (1, 2, 3 etc.)
+
+- Renommer toutes les variables et les paramètres de fonctions de façon cohérente
+
+#######################################################################################################################################
+Peut être utile :
+- Lister les groupes dans 'Global' et 'Universel' :
+    . (Get-ADGroup -Filter {Name -like "G_*"}).name ; (Get-ADGroup -Filter {name -like "U_*"}).name
+
+- Lister les OU sous une OU :
+	. (Get-ADOrganizationalUnit -Filter * | Where-Object {$_.DistinguishedName -like "OU=*,OU=Utilisateurs,OU=Agence,DC=guitton,DC=fr"}).Name
