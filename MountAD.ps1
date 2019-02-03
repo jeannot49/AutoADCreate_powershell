@@ -48,8 +48,9 @@ else {
                 '-SysvolPath' = 'C:\Windows\SYSVOL';
                 '-Force' = $true;
                 '-CreateDnsDelegation' = $false }
-
-                Import-Module ADDSDeployment
+                
+                Update-Help
+                Update-Module
                 Install-ADDSForest @ForestConfiguration
             } Catch {
                 Write-Output "$Feature : Error during installation !"
