@@ -68,7 +68,6 @@ function CheckPSVersion {
 	$PSversion = $PSVersionTable.PSVersion.Major
 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 	if ($PSversion -lt 4 ) {
-		$arch = (Get-WmiObject -Class Win32_ComputerSystem).SystemType
 		Write-Host ""
 		Write-Host "Version $PSVersion de Powershell détectée sur votre système"
 		do {
@@ -384,7 +383,6 @@ function CreateSecurityGroupByHand {
 # Création de plusieurs groupes de sécurité à partir d'un fichier .csv
 function CreateMultipleSecurityGroup {
     $tabgroup = Import-Csv -Path .\new_groups.csv -delimiter ";"    # Création des groupes nommés dans "new_groups.csv"
-    $groupcategory = 'Security'
     foreach ($item in $tabgroup) {
         $groupname = $item.name
         $groupscope = $item.groupscope
@@ -542,7 +540,6 @@ function CreateSimpleAGDLPShare {
     )
     $uds = "_"
     $coma = ","
-    $egal = "="
     $addomain = (Get-ADDomain).NetBIOSName
     $dlpath = (Get-ADOrganizationalUnit -Filter "name -like 'Domaines locaux'").distinguishedname
     $completesharename = "$addomain$uds$sharename"
@@ -694,7 +691,6 @@ function CreateUser {
 # Création de plusieurs utilisateurs
 function CreateMultipleUser {
     $tabusers = Import-csv -Path .\new_users.csv -delimiter ";" # Importation du tableau contenant les utilisateurs à ajouter, dans les bonnes OU
-    $oudomain = (Get-ADDomain).distinguishedname
     Write-Host "--- Création des utilisateurs ---"
     foreach ($item in $tabusers) {
         $username = $item.givenname
