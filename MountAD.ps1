@@ -12,12 +12,12 @@ Dernière modif.  :          2019-02-03 à 03:21
 do {
     $is_set = Read-Host "Is the network configuration set ? Yes (Y), No (N)"
 } until ($is_set -match '^[YN]+$')
-Write-Host "Please complete the informations asked below to configure the Active Directory Domain Services."
-$IPAddrv4 = Read-Host "IPv4 address "
-$PrefixLength = Read-Host "Subnet mask in CIDR notation "
-$DefaultGW = Read-Host "Default gateway "
-$FutureHostname = Read-Host "Future hostname of the domain controller (less than 15 characters) "
 if ($is_set -eq "N") {
+    Write-Host "Please complete the informations asked below to configure the Active Directory Domain Services."
+    $IPAddrv4 = Read-Host "IPv4 address "
+    $PrefixLength = Read-Host "Subnet mask in CIDR notation "
+    $DefaultGW = Read-Host "Default gateway "
+    $FutureHostname = Read-Host "Future hostname of the domain controller (less than 15 characters) "
     New-NetIPAddress -IPAddress $IPAddrv4 -PrefixLength "$PrefixLength" -InterfaceIndex (Get-NetAdapter).ifIndex -DefaultGateway 192.168.1.254
     Set-DnsClientServerAddress -InterfaceIndex (Get-NetAdapter).ifIndex -ServerAddresses ("127.0.0.1")
     Rename-Computer -NewName $FutureHostname -Force
