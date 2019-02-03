@@ -28,12 +28,12 @@ if ($is_set -eq "N") {
 else {
     $FeatureList = @("RSAT-AD-Tools","AD-Domain-Services","DNS")
     Foreach ($Feature in $FeatureList) {
-        if (((Get-WindowsFeature-Name $Feature).InstallState) -eq "Available") {
+        if (((Get-WindowsFeature -Name $Feature).InstallState) -eq "Available") {
             $DomainNameDNS = Read-Host "Enter you future DNS domain name "
             $DomainNameNetbios = Read-Host "Enter your future Netbios name "
             Write-Output "Feature $Feature will be installed now !"
             Try {
-                Add-WindowsFeature-Name $Feature-IncludeManagementTools -IncludeAllSubFeature
+                Add-WindowsFeature -Name $Feature -IncludeManagementTools -IncludeAllSubFeature
                 Write-Output "$Feature : Installation is a success !"
 
                 $ForestConfiguration = @{
