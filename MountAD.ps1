@@ -7,8 +7,6 @@ Version          :          1.0.8
 Dernière modif.  :          2019-02-03 à 03:21
 #>
 
-
-
 do {
     $is_set = Read-Host "Is the network configuration set ? Yes (Y), No (N)"
 } until ($is_set -match '^[YN]+$')
