@@ -14,7 +14,11 @@ Les 4 fichiers .csv à remplir sont donc
 Il vous sera demandé dans le script de bien vérifier que les champs sont remplis correctement.
 En effet, cette partie est essentielle pour le bon déroulement de la procédure. Si une erreur survient, pensez en premier lieu à vérifier ces fichiers.
 
-Remarque importante : 
+Penser à entrer la commande suivante pour autoriser les scripts :
+Set-ExecutionPolicy Unrestricted
+
+Remarque importante : Ce script a été testé sur une machine Windows Server 2012R2, à jour du 2 Février 2019 avec Powershell 4.0. Il est parfaitement compatible avec celle-ci mais peut présenter des beugs sur des versions précédentes ou suivantes.
+Un système en 32 ou 64 bits est requis.
 
 **************************************************************************************************
 Mises à jour :
@@ -39,6 +43,7 @@ V1.0.7 : Amélioration des fonctions de groupes : vérification de l'existence a
 		 Test de la fonction d'ajout d'un utilisateur à un groupe
 		 Nettoyage général du code, suppression des commentaires inutiles et ajout de nouveaux
 		 	. Commentaire des fonctions à compléter
+		 Création de groupes globaux portant le même nom que les OU sous "Utilisateurs"
 V1.0.8 : Amélioration des fonctions d'utilisateurs : vérification de l'existence avant d'ajouter
 		 Nettoyage du code : mise en ordre des fonctions de la librairie
 		 Rapatriement des commandes de CreateAD.ps1 dans la librairie, au sein d'une fonction
