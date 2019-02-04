@@ -6,6 +6,10 @@ Sources          :          - Microsoft Technet
                             - https://www.sqlshack.com/how-to-secure-your-passwords-with-powershell/
                             - https://www.itprotoday.com/powershell/powershell-one-liner-creating-and-modifying-environment-variable
                             - http://gmergit.blogspot.com/2011/11/recemment-jai-eu-besoin-de-creer-des.html
+                            - https://stackoverflow.com/questions/41618766/powershell-invoke-webrequest-fails-with-ssl-tls-secure-channel
+                            - https://lazywinadmin.com/2015/05/powershell-remove-diacritics-accents.html (François-Xavier Cat)
+                            - https://en.wikiversity.org/wiki/PowerShell/Arrays_and_Hash_Tables
+                            - https://www.developpez.net/forums/d1077534/general-developpement/programmation-systeme/windows/scripts-batch/executer-commande-contenue-variable/
 Version          :          1.0.8
 Dernière modif.  :          2019-02-01 à 02:09
 #>
@@ -29,12 +33,9 @@ Write-Host "!!!!!  IMPORTANT  !!!!! "
 Write-Host "S'il s'agit de la premiere execution de ce script dans l'annuaire, veuillez selectionner l'option (1)"
 PrincipalMenu
 
-#########################################
-# Demandes d'informations pour le domaine
-$RootOrganizationUnit = Read-Host "Entrez le nom de l'OU racine du domaine "
-CreateBaseStructure -RootOrganizationUnit $RootOrganizationUnit
-
-# /!\ TODO : Créer un Excel plus "convivial" pour la création des OU qui génère un .csv compatible avec le script
+##########################################
+# Création de la structure de base de l'AD
+CreateBaseStructure
 
 ##################################
 # Création des groupes de sécurité
@@ -45,13 +46,8 @@ PrincipalMenuGroups
 ######################################################################################
 # Création des partages et de 4 DL (AGDLP), 1 OU par partage dans l'OU "Domaine local"
 Write-Host ""
-Write-Host "/!\ Etape n°4 : Création d'une OU et de 4 DL correspondant à un partage réseau au sein du domaine"
-do {
-    $choice = Read-Host "Faut-il ajouter des partages ? Oui (O), Non (N)"
-} until ($choice -match '^[ON]+$')
-if ($choice -eq "O") {
-    CreateAGDLPShare
-}
+Write-Host "/!\ Etape n°4 : Création d'OU et de ses 4 DL correspondants (règle AGDLP)"
+PrincipalMenuAGDLP
 
 #############################################
 # Création d'un/des utilisateur(s) du domaine
@@ -62,7 +58,7 @@ PrincipalMenuUsers
 ##################
 # Sortie du script
 Write-Host ""
-Write-Host "/!\ Etape n°6"
+Write-Host "/!\ Etape n°6 : Fin du script"
 ExitScript
 
 #===================================================================

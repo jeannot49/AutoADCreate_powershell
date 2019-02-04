@@ -238,8 +238,10 @@ function PrincipalMenu {
                     Write-Host "/!\ Etape n°4 : Création d'OU et de ses 4 DL correspondants (règle AGDLP)"
                     CreateMultipleAGDLPShare
                     Write-Host ""
-                    Write-Host "/!\ Etape n°5 : Création d'un ou de plusieurs utilisateur(s) au sein du domaine"
+                    Write-Host "/!\ Etape n°5 : Création d'un ou de plusieurs modèles et utilisateurs au sein du domaine"
                     CreateMultipleUser
+                    Write-Host ""
+                    CreateMultipleUserTemplate
                     Write-Host ""
                     Write-Host "/!\ Etape n°6 : Fin du script"
                     ExitScript
@@ -306,7 +308,10 @@ function CreateBaseStructure {
     Write-Host "/!\ Etape n°2 : Création de groupes de sécurité, portant le même nom que les OU de service sous Utilisateurs"
 	$tabGroupOU = ($tabOU | Where-Object {$_.ou1name -match "Utilisateurs"}).name
 	foreach ($item in $tabGroupOU) {
-		CheckandAddGroup -Name $item -Scope '2'                   # Création de groupes de sécurité globaux
+        CheckGroup -Name $item -Scope '2'                   # Création de groupes de sécurité globaux
+        if ($Global:group_same -eq $false) {
+            CreateSimpleGroup -Name $item -Scope '2'
+        }
     }
 }
 
@@ -373,9 +378,13 @@ function CreateSecurityGroupByHand {
     	do {
         	$groupscope = Read-Host "Étendue du groupe : Domaine local (1), Global (2), Universel (3) "
 		} until ($groupscope -match '^[123]+$')
-		
+        Write-Host ""
+        
 		# Appel à la fonction de vérification puis d'ajout d'un utilisaterur
-    	CheckandAddGroup -Name $groupname -Scope $groupscope
+        CheckGroup -Name $groupname -Scope $groupscope
+        if ($Global:group_same -eq $false) {
+            CreateSimpleGroup -Name $groupname -Scope $groupscope
+        }
 	} 
 }
 
@@ -406,13 +415,16 @@ function CreateMultipleSecurityGroup {
                 $grouppath = (Get-ADOrganizationalUnit -Filter "name -like 'Groupes universels'").distinguishedname
             }
         }
-    CheckandAddGroup -Name $groupname -Scope $scope
+        CheckGroup -Name $groupname -Scope $scope
+        if ($Global:group_same -eq $false) {
+            CreateSimpleGroup -Name $groupname -Scope $scope
+        }
     }
 }
 
 ############################################################
 # Vérifie si un groupe existe déjà ou non avant de l'ajouter
-function CheckandAddGroup {
+function CheckGroup {
 	Param (
 		[string] $Name,
 		[string] $Scope
@@ -432,48 +444,40 @@ function CheckandAddGroup {
     $result = (Get-ADGroup -Filter {Name -like $base}).name
     if ($base -eq $result) {
         Write-Host "ATTENTION /!\ : Le groupe $base existe déjà, il n'a pas besoin d'etre ajouté"
+        $Global:group_same = $true
 	}
 	else {
-        switch ($Scope) {                           # Switch qui attribue la variable $groupscope en fonction de la valeur passée en paramètre
-			"1" {
-				$groupscope = "DomainLocal"
-			}
-			"2" {
-				$groupscope = "Global"
-			}
-			"3" {
-				$groupscope = "Universal"
-            }   
-        }
-        CreateSimpleGroup -GroupName $Name -GroupScope $groupscope
-    }
+        $Global:group_same = $false
+    }    
 }
 
 #######################################
 # Création simple d'un groupe dans l'AD
 function CreateSimpleGroup {
 	Param (
-	[string] $GroupName,
-	[string] $GroupScope,
-	[String] $Path
+	[string] $Name,
+	[string] $Scope
 	)
 	$groupcategory = 'Security'
-	switch ($GroupScope) {                           # Attribution des variables $secgroupprefix et $grouppath en fonction des paramètres passés plus haut
-		"DomainLocal" {
+	switch ($Scope) {                           # Attribution des variables $secgroupprefix et $grouppath en fonction des paramètres passés plus haut
+		"1" {
+            $groupscope = 'DomainLocal'
 			$secgroupprefix = 'DL_'
 			$grouppath = (Get-ADOrganizationalUnit -Filter "name -like 'Domaines locaux'").distinguishedname
 		}
-		"Global" {
+		"2" {
+            $groupscope = 'Global'
 			$secgroupprefix = 'G_'
 			$grouppath = (Get-ADOrganizationalUnit -Filter "name -like 'Groupes globaux'").distinguishedname
 		}
-		"Universal" {
+		"3" {
+            $groupscope = 'Universal'
 			$secgroupprefix = 'U_'
 			$grouppath = (Get-ADOrganizationalUnit -Filter "name -like 'Groupes universels'").distinguishedname
 		}
 	}
     # Ajout des groupes dans l'OU correspondante
-		New-ADGroup -DisplayName $secgroupprefix$groupname -Name $secgroupprefix$groupname -GroupCategory $groupcategory -GroupScope $groupscope -Path $grouppath -Verbose
+		New-ADGroup -DisplayName $secgroupprefix$Name -Name $secgroupprefix$Name -GroupCategory $groupcategory -GroupScope $groupscope -Path $grouppath -Verbose
 }
 
 #################################
@@ -605,15 +609,128 @@ function PrincipalMenuUsers {
 ##################################
 # Création d'un utilisateur modèle
 function CreateUserTemplate {
+    # Demande d'informations à l'utilisateur
+    do {
+        $Template = Read-Host "Entrez un nom de modèle (ex: resp), maximum 5 caractères "
+    } until ($Template.Length -le 5)
+    Write-Host ""
+    $userou = (Get-ADOrganizationalUnit -Filter * | Where-Object {$_.Name -like "Utilisateurs"}).DistinguishedName
+    $OUarray = (Get-ADOrganizationalUnit -Filter * | Where-Object {$_.DistinguishedName -like "OU=*,$userou"}).Name
+    $OUarray
+    Write-Host ""
+    do {
+        $ChoiceOU = Read-Host "Entrez l'OU d'appartenance pour ce modèle (liste ci-dessus) "
+    } until ($OUarray -contains $ChoiceOU)
+    $ChoiceOULow = Remove-StringDiacriticAndUpper -String $ChoiceOU
+    Write-Host ""
+    $GroupArray = (Get-ADGroup -Filter {(Name -like "G_*") -or (name -like "U_*")}).name
+    $GroupArray
+    Write-Host ""
+    do {
+        $CountGroup = Read-Host "Entrez le nombre de groupes (listés ci-dessus) dont le modèle doit faire partie "
+    } until ($CountGroup -match '^[123456789]+$')
     
+    # Création d'un tableau contenant tous les groupes auxquels appartiendra le modèle, il sera créé par la fonction CreateSimpleTemplate
+    $point = "."
+    $mod = "m"
+    $dnsroot = (Get-ADDomain).dnsroot
+    
+    # Tronquage du nom d'OU à partir de 12 caractères
+    if ($ChoiceOULow.Length -lt 12 ) {
+        $ChoiceOULowTrunk = $ChoiceOULow.Substring(0,$ChoiceOULow.Length)
+    }
+    else {
+        $ChoiceOULowTrunk = $ChoiceOULow.Substring(0,12)
+    }
+
+    $FullTemplName = "$mod$point$Template$point$ChoiceOULowTrunk".ToLower()
+
+    # Ajout du nouvel l'utilisateur modèle au groupe demandé après vérification de sa non-existence dans l'annuaire
+    CheckUser -SamAccName "$FullTemplName"
+    if ($Global:is_thesame -eq $false) {
+        Write-Host ""
+        Write-Host "--- Création de l'utilisateur $FullTemplName ---"
+        CreateSimpleTemplate -Name "$Template" -Container $ChoiceOU -Description "Modèle manuel - $Template - $ChoiceOULow" -GroupMemberof $UserChoice
+        Write-Host ""
+    }
+    for ($i = 0; $i -lt $CountGroup; $i++) {
+        $j = $i+1
+
+        # Vérification de la saisie : pour chacune des entrées ci-dessus le groupe doit exister au préalable
+        do {
+            do {
+                $UserChoice = Read-Host "Groupe n°$j contenant l'utilisateur $FullTemplName "
+            } until ($GroupArray -contains $UserChoice)
+            CheckGroupMembership -Username "$FullTemplName" -Groupname "$UserChoice"                # Appel à la fonction dé vérification d'appartenance à un groupe
+            if ($Global:is_member -eq $false) {
+                Write-Host "--- Ajout de l'utilisateur $FullTemplName au group $UserChoice ---"
+                Add-ADGroupMember -Identity "$UserChoice" -Members "$FullTemplName" -Server "$dnsroot" -Verbose     # S'il l'utilisateur n'appartient pas au groupe, alors on l'y ajoute
+            }
+        } until ($Global:is_member -eq $false)        
+        Write-Host ""
+    }
 }
 
 ######################################################
 # Création de plusieurs comptes d'utilisateurs modèles
 function CreateMultipleUserTemplate {
-    $tabusertemplate = Import-csv -Path .\new_usertemplates.csv -delimiter ";" # Importation du tableau contenant les modèles d'utilisateurs à ajouter, dans les bonnes OU
+    $tabusertemplate = Import-csv -Path .\new_templates.csv -delimiter ";" # Importation du tableau contenant les modèles d'utilisateurs à ajouter, dans les bonnes OU
     foreach ($item in $tabusertemplate) {
+        $point = "."
+        $mod = "m"
+        $templatename = $item.name
+        $templatenameLow = "$templatename".ToLower()
+        $templatedescr = $item.description
+        $templatecontainer = $item.container
+        $templategroup = $item.group
 
+        # Tronquage du nom à partir de 5 caractères
+        if ($templatenameLow.Length -lt 5 ) {
+            $templatenameLowTrunk = $templatenameLow.Substring(0,$templatenameLow.Length)
+        }
+        else {
+            $templatenameLowTrunk = $templatenameLow.Substring(0,5)
+        }
+    
+        # Tronquage du nom d'OU à partir de 12 caractères
+        if ($templatecontainer.Length -lt 12 ) {
+            $templatecontainerTrunk = $templatecontainer.Substring(0,$templatecontainer.Length)
+        }
+        else {
+            $templatecontainerTrunk = $templatecontainer.Substring(0,12)
+        }
+
+        $templatenameDef = Remove-StringDiacriticAndUpper -String $mod$point$templatenameLowTrunk$point$templatecontainerTrunk
+        $templatedescrDef = "Modèle de compte $templatenameLow pour le service $templatecontainer"
+        
+        # Vérification et ajout des modèles
+        # Puis ajout dans les bons groupes en fonction du fichier "new_templates.csv"
+        CheckUser -SamAccName "$templatenameDef"
+        if ($Global:is_thesame -eq $false) {
+            Write-Host ""
+            Write-Host "--- Création du modèle `"$templatenameDef`" ---"
+            CreateSimpleTemplate -Name "$templatename" -Container "$templatecontainer" -Description "$templatedescrDef"
+            $FinalCommand = "$templategroup | Add-ADGroupMember -Members $templatenameDef"
+            Invoke-Expression $FinalCommand
+        }
+    }
+}
+
+#############################################################
+# Vérification de l'appartenance d'un utilisateur à un groupe
+function CheckGroupMembership {
+    param (
+        [string] $Username,
+        [string] $Groupname
+    )
+    $dnsroot = (Get-ADDomain).dnsroot
+    $groupmember = (Get-ADGroupMember -Identity "$Groupname" -Server "$dnsroot").name
+    if ($groupmember -contains $Username) {
+        Write-Host "ATTENTION /!\ : L'utilisateur"`"$Username`"" fait déjà partie du groupe "`"$Groupname`"" et n'a pas besoin d'y être ajouté."
+        $Global:is_member = $true
+    }
+    else {
+        $Global:is_member = $false
     }
 }
 
@@ -621,20 +738,44 @@ function CreateMultipleUserTemplate {
 # Création d'un modèle utilisateur
 function CreateSimpleTemplate {
     Param (
-        [string] $Name,              # Attribut GivenName de l'utilisateur dans l'AD
-        [string] $Container          # Attribut DistinguishedName de l'utilisateur dans l'AD (sans le CommonName)
+        [string] $Name,                 # Inférieur ou égal à 5 caractères
+        [string] $Container,            # Inférieur ou égal à 12 caractères
+        [string] $Description           # Description du modèle
     )
+    $point = "."
     $coma = ","
+    $mod = "m"
     $usersdn = (Get-ADOrganizationalUnit -Filter "name -like 'Utilisateurs'").distinguishedname
     $companyname = (Get-ADDomain).NetBIOSName
     $dnsroot = (Get-ADDomain).dnsroot
 
+    # Tronquage du nom de compte à 5 à partir de caractères
+    if ($Name.Length -lt 5 ) {
+        $NameTrunk = $Name.Substring(0,$Name.Length)
+    }
+    else {
+        $NameTrunk = $Name.Substring(0,5)
+    }
+
+    # Tronquage du nom d'OU (variable Container) à partir de 12 caractères
+    if ($Container.Length -lt 12 ) {
+        $ContainerTrunk = $Container.Substring(0,$Container.Length)
+    }
+    else {
+        $ContainerTrunk = $Container.Substring(0,12)
+    }
+
+    $DefinitiveName = Remove-StringDiacriticAndUpper -String "$mod$point$NameTrunk$point$ContainerTrunk"
+
     New-ADUser `
-        -Name "$fullname" `
+        -Name "$DefinitiveName" `
+        -DisplayName "$DefinitiveName" `
+        -GivenName "$DefinitiveName" `
         -Company "$companyname" `
         -Path "OU=$Container$coma$usersdn" `
-        -Department "$container" `
+        -Department "$Container" `
         -PasswordNotRequired 1 `
+        -Description "$Description" `
         -Enabled 0 `
         -Verbose
 }
@@ -691,7 +832,6 @@ function CreateUser {
 # Création de plusieurs utilisateurs
 function CreateMultipleUser {
     $tabusers = Import-csv -Path .\new_users.csv -delimiter ";" # Importation du tableau contenant les utilisateurs à ajouter, dans les bonnes OU
-    Write-Host "--- Création des utilisateurs ---"
     foreach ($item in $tabusers) {
         $username = $item.givenname
         $usersurname = $item.surname
@@ -719,7 +859,7 @@ function CheckUser {
 	$base = (Get-ADUser -Filter {SamAccountName -like $SamAccName}).SamAccountName
 	$basename = (Get-ADUser -Filter {SamAccountName -like $SamAccName}).Name
     if ($SamAccName -like $base) {
-		Write-Host "ATTENTION /!\ : Ce nom existe déjà, il est attribué à $basename (login $base) et n'a pas besoin d'etre ajouté."
+		Write-Host "ATTENTION /!\ : L'utilisateur demandé existe déjà : $basename (login $base). Il n'a pas besoin d'etre ajouté."
         $Global:is_thesame=$true
     }
     else {
