@@ -5,7 +5,7 @@ Il est conseillé d'exécuter ce programme sur un annuaire Active Directory vena
 Plusieurs étapes sont détaillées dans le script mais il faut au préalable remplir les fichiers .csv qui serviront de base de données afin de peupler l'AD.
 Il est possible dans ce script de sélectionner l'étape à réaliser. Un menu sera en effet disponible dès début mais le programme pourra être lancé dans son intégralité. Néanmoins, lors de la toute première exécution, il est conseillé de lancer le script en entier afin de mettre en place un maximum d'objets.
 
-Les 5 fichiers .csv à remplir sont donc
+Les 5 fichiers .csv à remplir sont donc :
 	- new_OU.csv
 	- new_groups.csv
 	- new_templates.csv
@@ -34,7 +34,7 @@ Lisez attentivement les instructions d'installation qui suivent. Elles vous aide
 ----------
 3 - Le script vérifie également au départ si la console est en utf-8, si la version de Powershell est 4 au minimum et charge le module ActiveDirectory s'il ne l'est pas.
 ----------
-4 - Après cette étape apparaîtra un tableau (MENU PRINCIPAL) listant les actions possibles.
+4 - Après cette étape apparaîtra un tableau --- (MENU PRINCIPAL) --- listant les actions possibles.
 
 	. -> L'option 1 agit comme un assistant afin de peupler l'AD, soit à la main, soit grâce aux CSV préalablement remplis. C'est l'option recommandée pour un premier lancement sur un serveur.
 
@@ -43,7 +43,7 @@ Lisez attentivement les instructions d'installation qui suivent. Elles vous aide
 
 	. -> L'option 3 ajoute un ou plusieurs groupe(s) selon les besoins. Elle se présente sous la forme d'un autre tableau. En fonction du choix de l'étendue, le nom sera préfixé de "DL_", "G_" ou bien "U_".
 		
-		Entrées du (MENU GROUPES)
+		Entrées du --- (MENU GROUPES) ---
 		  1. Des questions seront posées, il faudra y répondre pour créer le groupe.
 		  2. Ajout via le fichier "csv\new_groups.csv".
 
@@ -54,7 +54,7 @@ Lisez attentivement les instructions d'installation qui suivent. Elles vous aide
 	La fin de l'opération consistera à ajouter des groupes de sécurité "Globaux" ou "Universels" dans ces groupes de DL afin d'appliquer les permissions des utilisateurs sur chacun de ces partages.
 	L'intérêt de l'automatisation prend alors ici tout son sens puisque l'on s'évite la création de tous ces objets. On respecte également une nomenclature bien définie.
 		
-		Entrées du (MENU PARTAGES AGDLP)
+		Entrées du --- (MENU PARTAGES AGDLP) ---
 		  1. Ajout à la main, avec demande du nombre de partages à créer, ainsi que leur nom.
 		  2. Ajout via le fichier CSV "csv\new_shares.csv".
 
@@ -62,7 +62,7 @@ Lisez attentivement les instructions d'installation qui suivent. Elles vous aide
 	L'utilisateur aura par exemple une adresse mail générée automatiquement par le remplissage des champs <SamAccountName> et <Domain>.
 	Le compte modèle sera quant à lui désactivé par défaut, et fera partie de groupes définis à l'avance.
 
-		Entrée du (MENU UTILISATEURS)
+		Entrée du --- (MENU UTILISATEURS) ---
 		  1. Ajout à la main d'un utilisateur avec demande du nombre à créer.
 		  2. Ajout via le fichier CSV "csv\new_users.csv"
 		  3. Ajout de modèles à la main : leur nom est généré automatiquement par : le préfixe "0m" puis la fonction du modèle (par exemple une fonction de Responsable) et tronqué à 4 caractères. Le nom de son OU parente, qui composera la fin du nom, le sera à 12.
@@ -74,6 +74,16 @@ Lisez attentivement les instructions d'installation qui suivent. Elles vous aide
 ----------
 	. -> L'option 7 permet de quitter le script quand on le souhaite. Un timeout d'une seconde se déclenche avant de quitter le processus.
 
+
+
+**************************************************************************************************
+***  					    MountAD.ps1	--> Instructions d'utilisation			 	  		   ***
+**************************************************************************************************
+1 - Suivre les instructions du script et laisser le rôle Active Directory s'installer avec les outils RSAT et le DNS. Une première partie concernera lse serveur en lui même :
+    . -> Nom d'hôte
+	. -> Adresse IP/Masque/DNS/Passerelle
+----------
+2 - Après redémarrage, lancer le programme de nouveau et saisir "Y" lorsque la question "Is the network configuration set ?" sera posée.
 
 
 **************************************************************************************************
@@ -116,6 +126,3 @@ V1.0.9 : Vérification de la version de Powershell
 		   . Fonction d'ajout automatique d'ajout de modèles au leurs groupes, grâce au fichier .csv new_templates.csv
 		 Fonction enlevant tout caractère accentué et/ou en majuscule : Remove-StringDiacriticAndUpper (par François-Xavier Cat, voir sources)
 		 Vérification : tous les fichiers .csv requis doivent être présents
-
-V1.0.0 : Création  d'un script d'installation de l'AD et promotion en contrôleur de domaine
-**************************************************************************************************
