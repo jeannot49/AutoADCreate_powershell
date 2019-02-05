@@ -3,8 +3,8 @@ Date de création :          2019-02-03 à 03:20
 Auteur           :          Jean Guitton
 Sources          :          - Microsoft Technet
                             - https://www.it-connect.fr/active-directory-deployer-adds-avec-powershell/
-Version          :          1.0.8
-Dernière modif.  :          2019-02-03 à 03:21
+Version          :          1.0.0
+Dernière modif.  :          2019-02-04 à 22:05
 #>
 
 do {
