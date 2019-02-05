@@ -691,10 +691,10 @@ function CreateUserTemplate {
                 $UserChoice = Read-Host "Groupe n°$j contenant l'utilisateur $FullTemplName "
                 CheckGroupMembership -Username "$FullTemplName" -Groupname "$UserChoice"                # Appel à la fonction dé vérification d'appartenance à un groupe
             } until (($GroupArray -contains $UserChoice) -and ($Global:is_member -eq $false))
-            
-                Write-Host "--- Ajout de l'utilisateur $FullTemplName au group $UserChoice ---"
-                Add-ADGroupMember -Identity "$UserChoice" -Members "$FullTemplName" -Server "$dnsroot" -Verbose     # S'il l'utilisateur n'appartient pas au groupe, alors on l'y ajoute
-                Write-Host ""
+            # Si l'utilisateur n'appartient pas au groupe, alors on l'y ajoute
+            Write-Host "--- Ajout de l'utilisateur $FullTemplName au groupe $UserChoice ---"
+            Add-ADGroupMember -Identity "$UserChoice" -Members "$FullTemplName" -Server "$dnsroot" -Verbose
+            Write-Host ""
         }
     }
 }
