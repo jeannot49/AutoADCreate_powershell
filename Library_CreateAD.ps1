@@ -7,8 +7,11 @@ Sources          :          - Microsoft Technet
                             - https://www.itprotoday.com/powershell/powershell-one-liner-creating-and-modifying-environment-variable
                             - http://gmergit.blogspot.com/2011/11/recemment-jai-eu-besoin-de-creer-des.html
                             - https://stackoverflow.com/questions/41618766/powershell-invoke-webrequest-fails-with-ssl-tls-secure-channel
-Version          :          1.0.8
-Dernière modif.  :          2019-02-01 à 02:09
+                            - https://lazywinadmin.com/2015/05/powershell-remove-diacritics-accents.html (François-Xavier Cat)
+                            - https://en.wikiversity.org/wiki/PowerShell/Arrays_and_Hash_Tables
+                            - https://www.developpez.net/forums/d1077534/general-developpement/programmation-systeme/windows/scripts-batch/executer-commande-contenue-variable/
+Version          :          1.0.9
+Dernière modif.  :          2019-02-04 à 22:05
 #>
 
 #==================================================================
@@ -21,6 +24,7 @@ function ExecuteVerifications {
     SetUTF8
     TestModulePresence -PSModule ActiveDirectory
     CheckPSVersion
+    CheckCSV
 }
 
 ######################################################################
@@ -110,6 +114,22 @@ function CheckPSVersion {
 	else {
 		Write-Host "La version de Powershell - $PSVersion - est compatible avec ce script"
 	}
+}
+
+###############################################################################################
+# Vérifie que tous les fichiers .csv requis sont présents dans le même répertoire que ce script
+function CheckCSV {
+    $are_present = $true
+    $ncsv = (Get-ChildItem csv\*.csv).name
+    $tabfile = ('new_OU.csv','new_templates.csv','new_users.csv','new_groups.csv','new_shares.csv')
+    foreach ($item in $tabfile) {
+        if ($ncsv -notcontains $item) {
+            Write-Host ""
+            Write-Host "ATTENTION /!\ : Fichier(s) $item asbent(s). Veuillez le(s) rajouter puis relancer ce script."
+            $are_present = $false
+        }
+    }
+    if ($are_present -eq $false) {DisplayErrorMessage}
 }
 
 ##########################################################################
@@ -218,7 +238,7 @@ function PrincipalMenu {
             PrincipalMenu
         }
         "6" {
-            $files = (Get-ChildItem -Filter *.csv).name
+            $files = (Get-ChildItem -Filter csv\*.csv).name
             Write-Host ""
             Write-Host "Est-ce que ces"$files.Count"fichiers sont remplis correctement ?"
             foreach ($item in $files) {
@@ -232,7 +252,7 @@ function PrincipalMenu {
                 "O" {
                     CreateBaseStructure
                     Write-Host ""
-                    Write-Host "/!\ Etape n°3 : Génération des groupes via une saisie manuelle ou par le fichier 'new_groups.csv'"
+                    Write-Host "/!\ Etape n°3 : Génération des groupes via une saisie manuelle ou par le fichier 'csv\new_groups.csv'"
                     CreateMultipleSecurityGroup
                     Write-Host ""
                     Write-Host "/!\ Etape n°4 : Création d'OU et de ses 4 DL correspondants (règle AGDLP)"
@@ -248,6 +268,7 @@ function PrincipalMenu {
                 }
                 "N" {
                     Write-Host "Retour au menu principal... Veuillez recommencer l'opération lorsque les fichiers seront complets."
+                    Wait-Event -Timeout 2
                     PrincipalMenu
                 }
             }
@@ -265,11 +286,11 @@ function CreateBaseStructure {
 	# Déclaration de variables
     $DomainDN = (Get-ADDomain).distinguishedname
     $RootArray = @('Utilisateurs','Ordinateurs','Groupes','Ressources','Partages')
-    $tabOU = Import-csv -Path .\new_ou.csv -delimiter ";"   # Importation du tableau contenant les services à placer dans l'annuaire, au sein de l'OU Racine
+    $tabOU = Import-csv -Path csv\new_ou.csv -delimiter ";"   # Importation du tableau contenant les services à placer dans l'annuaire, au sein de l'OU Racine
 	
     # Création de l'OU racine
     Write-Host ""
-    Write-Host "/!\ Étape n°1.0 : Création de l'OU racine, correspondant à la première valeur de la colonne 'ou2name' dans le fichier 'newOU.csv'"
+    Write-Host "/!\ Étape n°1.0 : Création de l'OU racine, correspondant à la première valeur de la colonne 'ou2name' dans le fichier 'csv\newOU.csv'"
 	$RootOrganizationUnit = $tabOU[0].ou2name
 
 	CheckOU -Name "$RootOrganizationUnit"
@@ -293,7 +314,7 @@ function CreateBaseStructure {
     # Création d'OU sous les OU de base mentionnées plus haut
     Write-Host ""
     Write-Host "/!\ Etape n°1.2 : Création des OU de services"
-	foreach ($item in $tabOU) {                            # Création d'OU de base, en fonction du fichier .csv "new_OU.csv"
+	foreach ($item in $tabOU) {                            # Création d'OU de base, en fonction du fichier .csv "csv\new_OU.csv"
         $oucreate = $item.name
         $oupath = $item.path
 
@@ -391,7 +412,7 @@ function CreateSecurityGroupByHand {
 ######################################################################
 # Création de plusieurs groupes de sécurité à partir d'un fichier .csv
 function CreateMultipleSecurityGroup {
-    $tabgroup = Import-Csv -Path .\new_groups.csv -delimiter ";"    # Création des groupes nommés dans "new_groups.csv"
+    $tabgroup = Import-Csv -Path csv\new_groups.csv -delimiter ";"    # Création des groupes nommés dans "csv\new_groups.csv"
     foreach ($item in $tabgroup) {
         $groupname = $item.name
         $groupscope = $item.groupscope
@@ -527,7 +548,7 @@ function CreateAGDLPShareByHand {
 }
 
 function CreateMultipleAGDLPShare {
-    $tabshare = Import-Csv -Path .\new_shares.csv -delimiter ";"        # Création des partages nommés dans "new_shares.csv"
+    $tabshare = Import-Csv -Path csv\new_shares.csv -delimiter ";"        # Création des partages nommés dans "csv\new_shares.csv"
     foreach ($item in $tabshare) {
         $Sharename = $item.name
         CreateSimpleAGDLPShare -Sharename $Sharename
@@ -609,75 +630,79 @@ function PrincipalMenuUsers {
 ##################################
 # Création d'un utilisateur modèle
 function CreateUserTemplate {
-    # Demande d'informations à l'utilisateur
     do {
-        $Template = Read-Host "Entrez un nom de modèle (ex: resp), maximum 5 caractères "
-    } until ($Template.Length -le 5)
-    Write-Host ""
-    $userou = (Get-ADOrganizationalUnit -Filter * | Where-Object {$_.Name -like "Utilisateurs"}).DistinguishedName
-    $OUarray = (Get-ADOrganizationalUnit -Filter * | Where-Object {$_.DistinguishedName -like "OU=*,$userou"}).Name
-    $OUarray
-    Write-Host ""
-    do {
-        $ChoiceOU = Read-Host "Entrez l'OU d'appartenance pour ce modèle (liste ci-dessus) "
-    } until ($OUarray -contains $ChoiceOU)
-    $ChoiceOULow = Remove-StringDiacriticAndUpper -String $ChoiceOU
-    Write-Host ""
-    $GroupArray = (Get-ADGroup -Filter {(Name -like "G_*") -or (name -like "U_*")}).name
-    $GroupArray
-    Write-Host ""
-    do {
-        $CountGroup = Read-Host "Entrez le nombre de groupes (listés ci-dessus) dont le modèle doit faire partie "
-    } until ($CountGroup -match '^[123456789]+$')
-    
-    # Création d'un tableau contenant tous les groupes auxquels appartiendra le modèle, il sera créé par la fonction CreateSimpleTemplate
-    $point = "."
-    $mod = "m"
-    $dnsroot = (Get-ADDomain).dnsroot
-    
-    # Tronquage du nom d'OU à partir de 12 caractères
-    if ($ChoiceOULow.Length -lt 12 ) {
-        $ChoiceOULowTrunk = $ChoiceOULow.Substring(0,$ChoiceOULow.Length)
-    }
-    else {
-        $ChoiceOULowTrunk = $ChoiceOULow.Substring(0,12)
-    }
-
-    $FullTemplName = "$mod$point$Template$point$ChoiceOULowTrunk".ToLower()
-
-    # Ajout du nouvel l'utilisateur modèle au groupe demandé après vérification de sa non-existence dans l'annuaire
-    CheckUser -SamAccName "$FullTemplName"
-    if ($Global:is_thesame -eq $false) {
-        Write-Host ""
-        Write-Host "--- Création de l'utilisateur $FullTemplName ---"
-        CreateSimpleTemplate -Name "$Template" -Container $ChoiceOU -Description "Modèle manuel - $Template - $ChoiceOULow" -GroupMemberof $UserChoice
-        Write-Host ""
-    }
-    for ($i = 0; $i -lt $CountGroup; $i++) {
-        $j = $i+1
-
-        # Vérification de la saisie : pour chacune des entrées ci-dessus le groupe doit exister au préalable
+        $count = Read-Host "Entrez le nombre de modèles à créer "
+    } until ($count -match '^[0123456789]+$')
+    for ($i = 1; $i -le $count; $i++) {
+        # Demande d'informations à l'utilisateur
         do {
-            do {
-                $UserChoice = Read-Host "Groupe n°$j contenant l'utilisateur $FullTemplName "
-            } until ($GroupArray -contains $UserChoice)
-            CheckGroupMembership -Username "$FullTemplName" -Groupname "$UserChoice"                # Appel à la fonction dé vérification d'appartenance à un groupe
-            if ($Global:is_member -eq $false) {
-                Write-Host "--- Ajout de l'utilisateur $FullTemplName au group $UserChoice ---"
-                Add-ADGroupMember -Identity "$UserChoice" -Members "$FullTemplName" -Server "$dnsroot" -Verbose     # S'il l'utilisateur n'appartient pas au groupe, alors on l'y ajoute
-            }
-        } until ($Global:is_member -eq $false)        
+            $Template = Read-Host "Entrez un nom de modèle (ex: resp), maximum 4 caractères "
+        } until ($Template.Length -le 4)
         Write-Host ""
+        $userou = (Get-ADOrganizationalUnit -Filter * | Where-Object {$_.Name -like "Utilisateurs"}).DistinguishedName
+        $OUarray = (Get-ADOrganizationalUnit -Filter * | Where-Object {$_.DistinguishedName -like "OU=*,$userou"}).Name
+        $OUarray
+        Write-Host ""
+        do {
+            $ChoiceOU = Read-Host "Entrez l'OU d'appartenance pour ce modèle (liste ci-dessus) "
+        } until ($OUarray -contains $ChoiceOU)
+        Write-Host ""
+        $GroupArray = (Get-ADGroup -Filter {(Name -like "G_*") -or (name -like "U_*")}).name
+        $GroupArray
+        Write-Host ""
+        do {
+            $CountGroup = Read-Host "Entrez le nombre de groupes (listés ci-dessus) dont le modèle doit faire partie "
+        } until ($CountGroup -match '^[123456789]+$')
+        
+        # Création d'un tableau contenant tous les groupes auxquels appartiendra le modèle, il sera créé par la fonction CreateSimpleTemplate
+        $point = "."
+        $mod = "0m"
+        $dnsroot = (Get-ADDomain).dnsroot
+        
+        # Tronquage du nom d'OU à partir de 12 caractères
+        if ($ChoiceOULow.Length -lt 12 ) {
+            $ChoiceOULowTrunk = $ChoiceOULow.Substring(0,$ChoiceOULow.Length)
+        }
+        else {
+            $ChoiceOULowTrunk = $ChoiceOULow.Substring(0,12)
+        }
+
+        $FullTemplName = Remove-StringDiacriticAndUpper -String "$mod$point$TemplateDef$point$ChoiceOULowTrunk"
+
+        # Ajout du nouvel l'utilisateur modèle au groupe demandé après vérification de sa non-existence dans l'annuaire
+        CheckUser -SamAccName "$FullTemplName"
+        if ($Global:is_thesame -eq $false) {
+            Write-Host ""
+            Write-Host "--- Création de l'utilisateur $FullTemplName ---"
+            CreateSimpleTemplate -Name "$FullTemplName" -Container $ChoiceOU -Description "Modèle manuel - $Template - $ChoiceOULow" -GroupMemberof $UserChoice
+            Write-Host ""
+        }
+        for ($i = 0; $i -lt $CountGroup; $i++) {
+            $j = $i+1
+
+            # Vérification de la saisie : pour chacune des entrées ci-dessus le groupe doit exister au préalable
+            do {
+                do {
+                    $UserChoice = Read-Host "Groupe n°$j contenant l'utilisateur $FullTemplName "
+                } until ($GroupArray -contains $UserChoice)
+                CheckGroupMembership -Username "$FullTemplName" -Groupname "$UserChoice"                # Appel à la fonction dé vérification d'appartenance à un groupe
+                if ($Global:is_member -eq $false) {
+                    Write-Host "--- Ajout de l'utilisateur $FullTemplName au group $UserChoice ---"
+                    Add-ADGroupMember -Identity "$UserChoice" -Members "$FullTemplName" -Server "$dnsroot" -Verbose     # S'il l'utilisateur n'appartient pas au groupe, alors on l'y ajoute
+                }
+            } until ($Global:is_member -eq $false)        
+            Write-Host ""
+        }
     }
 }
 
 ######################################################
 # Création de plusieurs comptes d'utilisateurs modèles
 function CreateMultipleUserTemplate {
-    $tabusertemplate = Import-csv -Path .\new_templates.csv -delimiter ";" # Importation du tableau contenant les modèles d'utilisateurs à ajouter, dans les bonnes OU
+    $tabusertemplate = Import-csv -Path csv\new_templates.csv -delimiter ";" # Importation du tableau contenant les modèles d'utilisateurs à ajouter, dans les bonnes OU
     foreach ($item in $tabusertemplate) {
         $point = "."
-        $mod = "m"
+        $mod = "0m"
         $templatename = $item.name
         $templatenameLow = "$templatename".ToLower()
         $templatedescr = $item.description
@@ -685,11 +710,11 @@ function CreateMultipleUserTemplate {
         $templategroup = $item.group
 
         # Tronquage du nom à partir de 5 caractères
-        if ($templatenameLow.Length -lt 5 ) {
+        if ($templatenameLow.Length -lt 4 ) {
             $templatenameLowTrunk = $templatenameLow.Substring(0,$templatenameLow.Length)
         }
         else {
-            $templatenameLowTrunk = $templatenameLow.Substring(0,5)
+            $templatenameLowTrunk = $templatenameLow.Substring(0,4)
         }
     
         # Tronquage du nom d'OU à partir de 12 caractères
@@ -704,12 +729,12 @@ function CreateMultipleUserTemplate {
         $templatedescrDef = "Modèle de compte $templatenameLow pour le service $templatecontainer"
         
         # Vérification et ajout des modèles
-        # Puis ajout dans les bons groupes en fonction du fichier "new_templates.csv"
+        # Puis ajout dans les bons groupes en fonction du fichier "csv\new_templates.csv"
         CheckUser -SamAccName "$templatenameDef"
         if ($Global:is_thesame -eq $false) {
             Write-Host ""
             Write-Host "--- Création du modèle `"$templatenameDef`" ---"
-            CreateSimpleTemplate -Name "$templatename" -Container "$templatecontainer" -Description "$templatedescrDef"
+            CreateSimpleTemplate -Name "$templatenameDef" -Container "$templatecontainer" -Description "$templatedescrDef"
             $FinalCommand = "$templategroup | Add-ADGroupMember -Members $templatenameDef"
             Invoke-Expression $FinalCommand
         }
@@ -744,33 +769,17 @@ function CreateSimpleTemplate {
     )
     $point = "."
     $coma = ","
-    $mod = "m"
+    $mod = "0m"
     $usersdn = (Get-ADOrganizationalUnit -Filter "name -like 'Utilisateurs'").distinguishedname
     $companyname = (Get-ADDomain).NetBIOSName
     $dnsroot = (Get-ADDomain).dnsroot
 
-    # Tronquage du nom de compte à 5 à partir de caractères
-    if ($Name.Length -lt 5 ) {
-        $NameTrunk = $Name.Substring(0,$Name.Length)
-    }
-    else {
-        $NameTrunk = $Name.Substring(0,5)
-    }
-
-    # Tronquage du nom d'OU (variable Container) à partir de 12 caractères
-    if ($Container.Length -lt 12 ) {
-        $ContainerTrunk = $Container.Substring(0,$Container.Length)
-    }
-    else {
-        $ContainerTrunk = $Container.Substring(0,12)
-    }
-
-    $DefinitiveName = Remove-StringDiacriticAndUpper -String "$mod$point$NameTrunk$point$ContainerTrunk"
+    #$DefinitiveName = Remove-StringDiacriticAndUpper -String "$mod$point$Name$point$Container"
 
     New-ADUser `
-        -Name "$DefinitiveName" `
-        -DisplayName "$DefinitiveName" `
-        -GivenName "$DefinitiveName" `
+        -Name "$Name" `
+        -DisplayName "$Name" `
+        -GivenName "$Name" `
         -Company "$companyname" `
         -Path "OU=$Container$coma$usersdn" `
         -Department "$Container" `
@@ -831,7 +840,7 @@ function CreateUser {
 ####################################
 # Création de plusieurs utilisateurs
 function CreateMultipleUser {
-    $tabusers = Import-csv -Path .\new_users.csv -delimiter ";" # Importation du tableau contenant les utilisateurs à ajouter, dans les bonnes OU
+    $tabusers = Import-csv -Path csv\new_users.csv -delimiter ";" # Importation du tableau contenant les utilisateurs à ajouter, dans les bonnes OU
     foreach ($item in $tabusers) {
         $username = $item.givenname
         $usersurname = $item.surname
@@ -907,7 +916,7 @@ function CreateSimpleUser {
 # Affichage d'un message d'erreur et sortie du script
 function DisplayErrorMessage {
     Write-Host ""
-    Write-Host "Erreur. Veuillez lire le message plus haut."
+    Write-Host "Erreur. Veuillez lire le(s) message(s) plus haut."
     Wait-Event -Timeout 5
     PrincipalMenuReduced
 }

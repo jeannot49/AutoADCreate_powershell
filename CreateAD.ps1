@@ -10,8 +10,8 @@ Sources          :          - Microsoft Technet
                             - https://lazywinadmin.com/2015/05/powershell-remove-diacritics-accents.html (François-Xavier Cat)
                             - https://en.wikiversity.org/wiki/PowerShell/Arrays_and_Hash_Tables
                             - https://www.developpez.net/forums/d1077534/general-developpement/programmation-systeme/windows/scripts-batch/executer-commande-contenue-variable/
-Version          :          1.0.8
-Dernière modif.  :          2019-02-01 à 02:09
+Version          :          1.0.9
+Dernière modif.  :          2019-02-04 à 22:06
 #>
 
 ###############################
