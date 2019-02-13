@@ -32,42 +32,42 @@ Lisez attentivement les instructions d'installation qui suivent. Elles vous aide
 ----------
 2 - Ayez un Active Directory vierge, des utilisateurs ou des groupes dans un AD déjà peuplé pourraient entrer en conflit avec ceux inclus dans les fichiers CSV lors de l'ajout.
 ----------
-3 - Le script vérifie également au départ si la console est en utf-8, si la version de Powershell est 4 au minimum et charge le module ActiveDirectory s'il ne l'est pas.
+3 - Le script vérifie également au départ si la console est en utf-8, si la version de Powershell est la 4ème au minimum et charge le module ActiveDirectory s'il ne l'est pas.
 ----------
-4 - Après cette étape apparaîtra un tableau --- (MENU PRINCIPAL) --- listant les actions possibles.
+4 - Après cette étape, apparaîtra un tableau --- (MENU PRINCIPAL) --- liste les actions possibles.
 
 	. -> L'option 1 agit comme un assistant afin de peupler l'AD, soit à la main, soit grâce aux CSV préalablement remplis. C'est l'option recommandée pour un premier lancement sur un serveur.
 
 	. -> L'option 2 permet de créer la structure de base de l'annuaire. Le reste du script repose sur cette partie, il est donc important qu'elle aie été exécutée au moins une fois.
-	Elle requiert un fichier CSV "csv\new_OU.csv' pour fonctionner.
+	Les options 1 et 6 exécutent automatiquement l'étape 2.
+	Elle requiert un fichier CSV "csv\new_OU.csv' complet pour fonctionner.
 
-	. -> L'option 3 ajoute un ou plusieurs groupe(s) selon les besoins. Elle se présente sous la forme d'un autre tableau. En fonction du choix de l'étendue, le nom sera préfixé de "DL_", "G_" ou bien "U_".
+	. -> L'option 3 ajoute un ou plusieurs groupe(s) selon les besoins. Elle se présente sous la forme d'un autre menu. En fonction du choix de l'étendue (Domaine local, Global ou Universel), le nom sera préfixé de "DL_", "G_" ou bien "U_".
 		
 		Entrées du --- (MENU GROUPES) ---
 		  1. Des questions seront posées, il faudra y répondre pour créer le groupe.
-		  2. Ajout via le fichier "csv\new_groups.csv".
+		  2. Ajout via le fichier "csv\new_groups.csv". Doit préalablement être complété.
 
 	. -> L'option 4 permet la même action pour créer des "partages" AGDLP. 
-	C'est une pratique consistant à imbriquer des groupes afin de ne pas avoir à modifier les permissions NTFS par la suite sur le serveur de fichiers.
+	C'est une pratique consistant à imbriquer des groupes afin de ne pas avoir à modifier les permissions NTFS par la suite sur le serveur de fichiers. On centralise ainsi la gestion des permissions sur l'Active Directory.
 	Premièrement, une OU sera créée, symbolisant le "partage". À l'intérieur, 4 groupes de domaine local se terminant tous par "CT", "M", "L" et "R" correspondent respectivement aux ACL : "Contrôle Total", "Modification", "Lecture" et "Refus".
-	Ces quatre groupes de DL (Domaine local) seront à placer dans les options dudit partage sur un serveur de fichiers membre du domaine. On attribuera alors le contrôle total au groupe <groupe>_CT, la modification au groupe <groupe>_M etc.
-	La fin de l'opération consistera à ajouter des groupes de sécurité "Globaux" ou "Universels" dans ces groupes de DL afin d'appliquer les permissions des utilisateurs sur chacun de ces partages.
-	L'intérêt de l'automatisation prend alors ici tout son sens puisque l'on s'évite la création de tous ces objets. On respecte également une nomenclature bien définie.
+	Ces quatre groupes de DL (Domaine local) seront à placer dans les options du partage sur le serveur de fichiers, membre du domaine. On attribuera alors le contrôle total au groupe <groupe>_CT, la modification au groupe <groupe>_M etc.
+	La fin de l'opération consistera à ajouter des groupes de sécurité "Globaux" ou "Universels" dans ces groupes de DL afin d'appliquer les permissions des utilisateurs/groupes sur chacun de ces partages.
+	L'intérêt de l'automatisation prend alors ici tout son sens puisque l'on s'évite la création de tous ces objets. Ce script respecte de plus une nomenclature bien définie.
 		
 		Entrées du --- (MENU PARTAGES AGDLP) ---
 		  1. Ajout à la main, avec demande du nombre de partages à créer, ainsi que leur nom.
-		  2. Ajout via le fichier CSV "csv\new_shares.csv".
+		  2. Ajout via le fichier CSV "csv\new_shares.csv". Doit préalablement être complété.
 
 	. -> L'option 5 recense les ajouts d'utilisateurs et de modèles, différenciées car ne possédant pas les mêmes caractéristiques.
 	L'utilisateur aura par exemple une adresse mail générée automatiquement par le remplissage des champs <SamAccountName> et <Domain>.
 	Le compte modèle sera quant à lui désactivé par défaut, et fera partie de groupes définis à l'avance.
 
 		Entrée du --- (MENU UTILISATEURS) ---
-		  1. Ajout à la main d'un utilisateur avec demande du nombre à créer.
-		  2. Ajout via le fichier CSV "csv\new_users.csv"
+		  1. Ajout à la main avec demande du nombre d'utilisateurs à créer.
+		  2. Ajout via le fichier CSV "csv\new_users.csv". Doit préalablement être complété.
 		  3. Ajout de modèles à la main : leur nom est généré automatiquement par : le préfixe "0m" puis la fonction du modèle (par exemple une fonction de Responsable) et tronqué à 4 caractères. Le nom de son OU parente, qui composera la fin du nom, le sera à 12.
 		  4. Ajout via le fichier CSV "csv\new_templates.csv", il faut entrer les noms avec les préfixes "G_" ou "U_" dans le fichier Excel, il y aura un risque d'erreur d'attribution aux groupes dans le cas contraire.
-
 ----------
 	. -> L'option 6 installe automatiquement tous les objets cités dans les fichiers Excel. Le script demande en premier lieu la confirmation que tous les fichiers sont remplis correctement, puis procède à la construction de l'arborescence.
 	Cette option est déconseillée si vous n'êtes pas certain du contenu de vos fichiers CSV. Une certaine rigueur dans le nommage des utilisateurs, des groupes, des partages et des modèles est requise pour cette partie.

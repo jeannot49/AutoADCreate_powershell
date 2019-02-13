@@ -16,7 +16,7 @@ if ($is_set -eq "N") {
     $PrefixLength = Read-Host "Subnet mask in CIDR notation "
     $DefaultGW = Read-Host "Default gateway "
     $FutureHostname = Read-Host "Future hostname of the domain controller (less than 15 characters) "
-    New-NetIPAddress -IPAddress $IPAddrv4 -PrefixLength "$PrefixLength" -InterfaceIndex (Get-NetAdapter).ifIndex -DefaultGateway 192.168.1.254
+    New-NetIPAddress -IPAddress $IPAddrv4 -PrefixLength "$PrefixLength" -InterfaceIndex (Get-NetAdapter).ifIndex -DefaultGateway $DefaultGW
     Set-DnsClientServerAddress -InterfaceIndex (Get-NetAdapter).ifIndex -ServerAddresses ("127.0.0.1")
     Rename-Computer -NewName $FutureHostname -Force
     Write-Host "Re-launch this script after the restart..."
@@ -56,3 +56,6 @@ else {
         }
     }
 }
+
+# Install new domain
+# PS C:\Users\Administrateur.WIN-TRQL9E7GR05\Documents\Magasin scripts> Install-ADDSDomain -Credential (Get-Credential KHOLAT\Administrateur) -NewDomainName fr -ParentDomainName kholat.fr -InstallDns -CreateDnsDelegation -DomainMode Win2012R2 -ReplicationSourceDC DC-WS2016-01 -DatabasePath C:\kholat-fr\NTDS\ -SysvolPath C:\kholat-fr\SYSVOL\ -LogPath C:\kholat-fr\Logs\ -NoRebootOnCompletion

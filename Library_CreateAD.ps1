@@ -15,7 +15,7 @@ Dernière modif.  :          2019-02-04 à 22:05
 #>
 
 #==================================================================
-#========================== Library file ==========================
+#========================== Backend file ==========================
 #==================================================================
 
 ###################################
@@ -685,7 +685,7 @@ function CreateUserTemplate {
         }
 
         # Procédure d'ajout de cet utilisateur aux groupes demandés
-        for ($i = 0; $i -lt $CountGroup; $i++) {
+        for ($x = 0; $x -lt $CountGroup; $x++) {
             $j = $i+1
             do {
                 $UserChoice = Read-Host "Groupe n°$j contenant l'utilisateur $FullTemplName "
@@ -771,14 +771,9 @@ function CreateSimpleTemplate {
         [string] $Container,            # Inférieur ou égal à 12 caractères
         [string] $Description           # Description du modèle
     )
-    #$point = "."
     $coma = ","
-    #$mod = "0m"
     $usersdn = (Get-ADOrganizationalUnit -Filter "name -like 'Utilisateurs'").distinguishedname
     $companyname = (Get-ADDomain).NetBIOSName
-    #$dnsroot = (Get-ADDomain).dnsroot
-
-    #$DefinitiveName = Remove-StringDiacriticAndUpper -String "$mod$point$Name$point$Container"
 
     New-ADUser `
         -Name "$Name" `
@@ -942,5 +937,5 @@ function ExitScript {
 }
 
 #=========================================================================
-#========================== End of library file ==========================
+#========================== End of backend file ==========================
 #=========================================================================
