@@ -18,6 +18,50 @@ Dernière modif.  :          2019-02-04 à 22:05
 # Tests pour inclusion de la librairie de fonctions
 . .\Library_CreateAD.ps1
 
+######################################################
+# Création de plusieurs comptes d'utilisateurs modèles
+function CreateMultipleUserTemplate {
+    $tabusertemplate = Import-csv -Path csv\new_templates.csv -delimiter ";" # Importation du tableau contenant les modèles d'utilisateurs à ajouter, dans les bonnes OU
+    foreach ($item in $tabusertemplate) {
+        $point = "."
+        $mod = "0m"
+        $templatename = $item.name
+        $templatenameLow = "$templatename".ToLower()
+        #$templatedescr = $item.description
+        $templatecontainer = $item.container
+        $templategroup = $item.group
+
+        # Tronquage du nom à partir de 5 caractères
+        if ($templatenameLow.Length -lt 4 ) {
+            $templatenameLowTrunk = $templatenameLow.Substring(0,$templatenameLow.Length)
+        }
+        else {
+            $templatenameLowTrunk = $templatenameLow.Substring(0,4)
+        }
+    
+        # Tronquage du nom d'OU à partir de 12 caractères
+        if ($templatecontainer.Length -lt 12 ) {
+            $templatecontainerTrunk = $templatecontainer.Substring(0,$templatecontainer.Length)
+        }
+        else {
+            $templatecontainerTrunk = $templatecontainer.Substring(0,12)
+        }
+
+        $templatenameDef = Remove-StringDiacriticAndUpper -String $mod$point$templatenameLowTrunk$point$templatecontainerTrunk
+        $templatedescrDef = "Modèle de compte $templatenameLow pour le service $templatecontainer"
+        
+        # Vérification et ajout des modèles
+        # Puis ajout dans les bons groupes en fonction du fichier "csv\new_templates.csv"
+        CheckUser -SamAccName "$templatenameDef"
+        if ($Global:is_thesame -eq $false) {
+            Write-Host ""
+            Write-Host "--- Création du modèle `"$templatenameDef`" ---"
+            CreateSimpleTemplate -Name "$templatenameDef" -Container "$templatecontainer" -Description "$templatedescrDef"
+            $FinalCommand = "$templategroup | Add-ADGroupMember -Members $templatenameDef"
+            Invoke-Expression $FinalCommand
+        }
+    }
+}
 
 ###############################################
 # Appel de la fonction obligatoire pour le test
