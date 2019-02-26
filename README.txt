@@ -50,10 +50,10 @@ Lisez attentivement les instructions d'installation qui suivent. Elles vous aide
 
 	. -> L'option 4 permet la même action pour créer des "partages" AGDLP. 
 	C'est une pratique consistant à imbriquer des groupes afin de ne pas avoir à modifier les permissions NTFS par la suite sur le serveur de fichiers. On centralise ainsi la gestion des permissions sur l'Active Directory.
-	Premièrement, une OU sera créée, symbolisant le "partage". À l'intérieur, 4 groupes de domaine local se terminant tous par "CT", "M", "L" et "R" correspondent respectivement aux ACL : "Contrôle Total", "Modification", "Lecture" et "Refus".
+	Premièrement, une OU sera créée, symbolisant le "partage". À l'intérieur, 4 groupes de domaine local se terminant tous par "CT", "M", "L" et "R" correspondent respectivement au "Contrôle Total", "Modification", "Lecture" et "Refus".
 	Ces quatre groupes de DL (Domaine local) seront à placer dans les options du partage sur le serveur de fichiers, membre du domaine. On attribuera alors le contrôle total au groupe <groupe>_CT, la modification au groupe <groupe>_M etc.
 	La fin de l'opération consistera à ajouter des groupes de sécurité "Globaux" ou "Universels" dans ces groupes de DL afin d'appliquer les permissions des utilisateurs/groupes sur chacun de ces partages.
-	L'intérêt de l'automatisation prend alors ici tout son sens puisque l'on s'évite la création de tous ces objets. Ce script respecte de plus une nomenclature bien définie.
+	L'intérêt de l'automatisation prend alors ici tout son sens puisque l'on évite la création de tous ces groupes à la main.
 		
 		Entrées du --- (MENU PARTAGES AGDLP) ---
 		  1. Ajout à la main, avec demande du nombre de partages à créer, ainsi que leur nom.
@@ -67,9 +67,9 @@ Lisez attentivement les instructions d'installation qui suivent. Elles vous aide
 		  1. Ajout à la main avec demande du nombre d'utilisateurs à créer.
 		  2. Ajout via le fichier CSV "csv\new_users.csv". Doit préalablement être complété.
 		  3. Ajout de modèles à la main : leur nom est généré automatiquement par : le préfixe "0m" puis la fonction du modèle (par exemple une fonction de Responsable) et tronqué à 4 caractères. Le nom de son OU parente, qui composera la fin du nom, le sera à 12.
-		  4. Ajout via le fichier CSV "csv\new_templates.csv", il faut entrer les noms avec les préfixes "G_" ou "U_" dans le fichier Excel, il y aura un risque d'erreur d'attribution aux groupes dans le cas contraire.
+		  4. Ajout via le fichier CSV "csv\new_templates.csv", il faut entrer les noms avec les préfixes "G_" ou "U_" dans le fichier Excel. Il y aura un risque d'erreur dans le cas contraire.
 ----------
-	. -> L'option 6 installe automatiquement tous les objets cités dans les fichiers Excel. Le script demande en premier lieu la confirmation que tous les fichiers sont remplis correctement, puis procède à la construction de l'arborescence.
+	. -> L'option 6 ajoute automatiquement tous les objets (utilisateurs, groupes etc.) présents dans les fichiers Excel. En premier lieu, il faudra confirmer que tous les fichiers sont remplis correctement pour alimenter l'AD.
 	Cette option est déconseillée si vous n'êtes pas certain du contenu de vos fichiers CSV. Une certaine rigueur dans le nommage des utilisateurs, des groupes, des partages et des modèles est requise pour cette partie.
 ----------
 	. -> L'option 7 permet de quitter le script quand on le souhaite. Un timeout d'une seconde se déclenche avant de quitter le processus.
@@ -83,11 +83,12 @@ Lisez attentivement les instructions d'installation qui suivent. Elles vous aide
     . -> Nom d'hôte
 	. -> Adresse IP/Masque/DNS/Passerelle
 ----------
-2 - Après redémarrage, lancer le programme de nouveau et saisir "Y" lorsque la question "Is the network configuration set ?" sera posée.
+2 - Après redémarrage, lancer le script à nouveau et saisir "Y" lorsque la question "Is the network configuration set ?" sera posée.
+
 
 
 **************************************************************************************************
-***										  Mises à jour :									   ***
+***										  Notes de version :								   ***
 **************************************************************************************************
 V1.0.0 : Création de la structure de bases d'UO (Types de ressources, services, matériel 
 		 etc.) grâce au fichier new_OU.csv
@@ -122,7 +123,7 @@ V1.0.9 : Vérification de la version de Powershell
 		 Demander à l'utilisateur combien d'utilisateurs/groupes/modèles il veut créer
 		 Fonctionnalité Mode automatique : aucune action utilisateur
 		 Création de modèles d'utilisateurs
-		 Vérification de la longueur des oms de modèles : inférieurs à 20 caractères au total
+		 Vérification de la longueur des noms de modèles. In doivent contenir moins de 20 caractères.
 		   . Fonction d'ajout automatique d'ajout de modèles au leurs groupes, grâce au fichier .csv new_templates.csv
 		 Fonction enlevant tout caractère accentué et/ou en majuscule : Remove-StringDiacriticAndUpper (par François-Xavier Cat, voir sources)
 		 Vérification : tous les fichiers .csv requis doivent être présents
