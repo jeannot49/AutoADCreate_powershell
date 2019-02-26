@@ -27,7 +27,6 @@ function CreateMultipleUserTemplate {
         $mod = "0m"
         $templatename = $item.name
         $templatenameLow = "$templatename".ToLower()
-        #$templatedescr = $item.description
         $templatecontainer = $item.container
         $templategroup = $item.group
 
@@ -63,6 +62,53 @@ function CreateMultipleUserTemplate {
     }
 }
 
+function Detest {
+    $tabusertemplate = Import-csv -Path csv\new_templates.csv -delimiter ";" # Importation du tableau contenant les modèles d'utilisateurs à ajouter, dans les bonnes OU
+    $init = 0
+    foreach ($item in $tabusertemplate) {
+        $templatename = $item.name
+        $templatecontainer = $item.container
+        $GroupUniversal = $item.universal
+        $point = "."
+        $mod = "0m"
+        $templatenameLow = $templatename.ToLower()
+
+        # Tronquage du nom à partir de 5 caractères
+        if ($templatenameLow.Length -lt 4 ) {
+            $templatenameLowTrunk = $templatenameLow.Substring(0,$templatenameLow.Length)
+        }
+        else {
+            $templatenameLowTrunk = $templatenameLow.Substring(0,4)
+        }
+    
+        # Tronquage du nom d'OU à partir de 12 caractères
+        if ($templatecontainer.Length -lt 12 ) {
+            $templatecontainerTrunk = $templatecontainer.Substring(0,$templatecontainer.Length)
+        }
+        else {
+            $templatecontainerTrunk = $templatecontainer.Substring(0,12)
+        }
+
+        $templatenameDef = Remove-StringDiacriticAndUpper -String $mod$point$templatenameLowTrunk$point$templatecontainerTrunk
+        $templatedescrDef = "Modèle de compte $templatenameLow pour le service $templatecontainer"
+
+        CheckUser -SamAccName "$templatenameDef"
+        if ($Global:is_thesame -eq $false) {
+            Write-Host ""
+            Write-Host "--- Création du modèle `"$templatenameDef`" ---"
+            CreateSimpleTemplate -Name "$templatenameDef" -Container "$templatecontainer" -Description "$templatedescrDef"
+            $GroupSplit = $tabusertemplate[$init].groups.Split(',')
+            for ($i = 0; $i -lt $GroupSplit.Length; $i++) {
+                $QuotedGroupSplit = $GroupSplit[$i]
+                $DefQuotedGroupSplit = "`"$QuotedGroupSplit`""
+                $FinalCommand = "$DefQuotedGroupSplit | Add-ADGroupMember -Members $templatenameDef"
+                Invoke-Expression $FinalCommand
+            }
+        }
+        $init = $init + 1
+    }
+}
+
 ###############################################
 # Appel de la fonction obligatoire pour le test
-CheckCSV
+Detest
