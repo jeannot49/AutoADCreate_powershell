@@ -10,8 +10,8 @@ Sources          :          - Microsoft Technet
                             - https://lazywinadmin.com/2015/05/powershell-remove-diacritics-accents.html (François-Xavier Cat)
                             - https://en.wikiversity.org/wiki/PowerShell/Arrays_and_Hash_Tables
                             - https://www.developpez.net/forums/d1077534/general-developpement/programmation-systeme/windows/scripts-batch/executer-commande-contenue-variable/
-Version          :          1.0.9
-Dernière modif.  :          2019-02-04 à 22:05
+Version          :          1.1.0
+Dernière modif.  :          2019-02-27 à 00:01
 #>
 
 #==================================================================
@@ -703,14 +703,14 @@ function CreateUserTemplate {
 # Création de plusieurs comptes d'utilisateurs modèles
 function CreateMultipleUserTemplate {
     $tabusertemplate = Import-csv -Path csv\new_templates.csv -delimiter ";" # Importation du tableau contenant les modèles d'utilisateurs à ajouter, dans les bonnes OU
+    $init = 0
     foreach ($item in $tabusertemplate) {
+        $templatename = $item.name
+        $templatecontainer = $item.container
+        $GroupUniversal = $item.universal
         $point = "."
         $mod = "0m"
-        $templatename = $item.name
-        $templatenameLow = "$templatename".ToLower()
-        #$templatedescr = $item.description
-        $templatecontainer = $item.container
-        $templategroup = $item.group
+        $templatenameLow = $templatename.ToLower()
 
         # Tronquage du nom à partir de 5 caractères
         if ($templatenameLow.Length -lt 4 ) {
@@ -730,17 +730,21 @@ function CreateMultipleUserTemplate {
 
         $templatenameDef = Remove-StringDiacriticAndUpper -String $mod$point$templatenameLowTrunk$point$templatecontainerTrunk
         $templatedescrDef = "Modèle de compte $templatenameLow pour le service $templatecontainer"
-        
-        # Vérification et ajout des modèles
-        # Puis ajout dans les bons groupes en fonction du fichier "csv\new_templates.csv"
+
         CheckUser -SamAccName "$templatenameDef"
         if ($Global:is_thesame -eq $false) {
             Write-Host ""
             Write-Host "--- Création du modèle `"$templatenameDef`" ---"
             CreateSimpleTemplate -Name "$templatenameDef" -Container "$templatecontainer" -Description "$templatedescrDef"
-            $FinalCommand = "$templategroup | Add-ADGroupMember -Members $templatenameDef"
-            Invoke-Expression $FinalCommand
+            $GroupSplit = $tabusertemplate[$init].groups.Split(',')
+            for ($i = 0; $i -lt $GroupSplit.Length; $i++) {
+                $QuotedGroupSplit = $GroupSplit[$i]
+                $DefQuotedGroupSplit = "`"$QuotedGroupSplit`""
+                $FinalCommand = "$DefQuotedGroupSplit | Add-ADGroupMember -Members $templatenameDef"
+                Invoke-Expression $FinalCommand
+            }
         }
+        $init = $init + 1
     }
 }
 
