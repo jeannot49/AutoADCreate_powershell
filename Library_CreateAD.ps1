@@ -707,7 +707,6 @@ function CreateMultipleUserTemplate {
     foreach ($item in $tabusertemplate) {
         $templatename = $item.name
         $templatecontainer = $item.container
-        $GroupUniversal = $item.universal
         $point = "."
         $mod = "0m"
         $templatenameLow = $templatename.ToLower()
