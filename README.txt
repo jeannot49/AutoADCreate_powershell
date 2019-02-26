@@ -127,3 +127,4 @@ V1.0.9 : Vérification de la version de Powershell
 		   . Fonction d'ajout automatique d'ajout de modèles au leurs groupes, grâce au fichier .csv new_templates.csv
 		 Fonction enlevant tout caractère accentué et/ou en majuscule : Remove-StringDiacriticAndUpper (par François-Xavier Cat, voir sources)
 		 Vérification : tous les fichiers .csv requis doivent être présents
+V1.1.0 : Amélioration de la fonction d'ajout de modèle d'utilisateurs multiples. Le remplissage du .csv a été simplifié.
