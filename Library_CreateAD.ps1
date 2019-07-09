@@ -686,7 +686,7 @@ function CreateUserTemplate {
 
         # Procédure d'ajout de cet utilisateur aux groupes demandés
         for ($x = 0; $x -lt $CountGroup; $x++) {
-            $j = $i+1
+            $j = $x+1
             do {
                 $UserChoice = Read-Host "Groupe n°$j contenant l'utilisateur $FullTemplName "
                 CheckGroupMembership -Username "$FullTemplName" -Groupname "$UserChoice"                # Appel à la fonction dé vérification d'appartenance à un groupe
