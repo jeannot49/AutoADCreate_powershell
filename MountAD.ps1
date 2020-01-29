@@ -19,9 +19,10 @@ if ($is_set -eq "N") {
     New-NetIPAddress -IPAddress $IPAddrv4 -PrefixLength "$PrefixLength" -InterfaceIndex (Get-NetAdapter).ifIndex -DefaultGateway $DefaultGW
     Set-DnsClientServerAddress -InterfaceIndex (Get-NetAdapter).ifIndex -ServerAddresses ("127.0.0.1")
     Rename-Computer -NewName $FutureHostname -Force
-    Write-Host "Re-launch this script after the restart..."
-    Wait-Event -Timeout 3
-    Restart-Computer
+    Write-Host
+    Write-Host -Foreground "Yellow" -Background "Black" "/!\ Re-launch this script after the restart... /!\"
+    Write-Host
+    Restart-Computer -Confirm
 }
 else {
     $FeatureList = @("RSAT-AD-Tools","AD-Domain-Services","DNS")
@@ -46,9 +47,7 @@ else {
                 '-SysvolPath' = 'C:\Windows\SYSVOL';
                 '-Force' = $true;
                 '-CreateDnsDelegation' = $false }
-                
-                Update-Help
-                Update-Module
+
                 Install-ADDSForest @ForestConfiguration
             } Catch {
                 Write-Output "$Feature : Error during installation !"
